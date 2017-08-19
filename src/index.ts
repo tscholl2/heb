@@ -1,8 +1,14 @@
-import { h, app } from "hyperapp";
+import app from "./app";
 
-app({
-  state: {
-    title: "Hello!",
-  },
-  view: (state: any) => h("h1", {}, state.title),
-});
+app({ title: "ugh" });
+
+declare const module: any;
+declare const window: any;
+if (process.env.NODE_ENV === "development") {
+  if (module.hot) {
+    module.hot.accept("./app", function() {
+      document.body.innerHTML = "";
+      app(window["state"]);
+    });
+  }
+}

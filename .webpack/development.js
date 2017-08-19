@@ -1,13 +1,10 @@
-const merge = require('webpack-merge');
-const webpack = require('webpack');
-const base = require('./base');
+const merge = require("webpack-merge");
+const webpack = require("webpack");
+const base = require("./base");
 
 module.exports = merge(base, {
-  entry: [
-    'react-hot-loader/patch',
-    './src/index.ts',
-  ],
-  devtool: 'eval',
+  entry: [ "./src/index.ts"],
+  devtool: "eval",
   plugins: [
     new webpack.LoaderOptionsPlugin({
       debug: true,
