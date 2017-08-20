@@ -7,16 +7,17 @@ declare module "hyperapp" {
     children: (VirtualNode | string)[];
   }
 
-  export function h<D>(
-    tag: string,
-    data?: D,
-    ...children: (VirtualNode<any> | string)[]
-  ): VirtualNode<D>;
+  export function h<D>(tag: string, data?: D, ...children: VirtualNode["children"]): VirtualNode<D>;
+
+  type Component<I = any, O = I> = (
+    data: I,
+    ...children: VirtualNode["children"]
+  ) => VirtualNode<O>;
 
   export function h<D>(
-    component: (data?: D, ...children: (VirtualNode<any> | string)[]) => VirtualNode<D>,
-    data?: D,
-    ...children: (VirtualNode<any> | string)[]
+    component: Component<D>,
+    data: D,
+    ...children: VirtualNode["children"]
   ): VirtualNode<D>;
 
   // app function
@@ -25,9 +26,11 @@ declare module "hyperapp" {
 
   // this is how actions are used
   export type ActionResult<S extends State> = Partial<S> | void | Promise<Partial<S>>;
-  export type Action<S extends State, D = any> = (data: D) => any;
+  export type Action<S extends State, D = any> = (data: D) => ActionResult<S>;
 
-  export type Actions<S extends State> = { [domain: string]: Action<S> | { [name: string]: Action<S> } };
+  export type Actions<S extends State> = {
+    [domain: string]: Action<S> | { [name: string]: Action<S> };
+  };
 
   // this is how actions are defined
   export type DefAction<S extends State, A extends Actions<S>, D = any> = (
@@ -37,7 +40,8 @@ declare module "hyperapp" {
   ) => Partial<S> | Promise<Partial<S>> | undefined | void;
 
   export type DefActions<S extends State, A extends Actions<S>> = {
-    [domain in keyof A]: { [name in keyof A[domain]]: DefAction<S, A> } | DefAction<S, A>
+    [// TODO: we should be able to get the data type from Action to DefAction
+    domain in keyof A]: { [name in keyof A[domain]]: DefAction<S, A> } | DefAction<S, A>
   };
 
   // this is how events are defined
@@ -58,13 +62,23 @@ declare module "hyperapp" {
 
   export type Events<S extends State, A extends Actions<S>> = { [name: string]: Event<S, A> };
 
+  // the view is the root component
+
   export interface View<State, Actions, Data = any> {
     (state: State, actions: Actions): VirtualNode<Data>;
   }
 
+  // Emit is how events are fired
+
   export type Emit<Events, K extends keyof Events = keyof Events> = (name: K, data?: any) => any;
 
-  export type Mixin<S extends State = {}, A extends Actions<S> = {}, E extends Events<S, A> = {}> = (
+  // a mixin allows additional actions/events/etc
+
+  export type Mixin<
+    S extends State = {},
+    A extends Actions<S> = {},
+    E extends Events<S, A> = {}
+  > = (
     emit: Emit<E & DefaultEvents<S, A>>,
   ) => {
     state?: Partial<S>;
@@ -72,6 +86,8 @@ declare module "hyperapp" {
     events?: Partial<E & DefaultEvents<S, A>>;
     mixins?: Array<Mixin<S, any, any>>;
   };
+
+  // how an app is created
 
   export function app<S extends State, A extends Actions<S>, E extends Events<S, A>>(app: {
     state?: S;
@@ -81,3 +97,27 @@ declare module "hyperapp" {
     mixins?: Array<Mixin<S, A, E & DefaultEvents<S, A>>>;
   }): Emit<E & DefaultEvents<S, A>>;
 }
+
+/*
+// Question: Can we get better types for DefActions?
+
+// Fn1 is a function with a single parameter.
+type Fn1<I = any, O = any> = (input: I) => O;
+// Fn2 is a function with a two parameters, where the first is always a number.
+type Fn2<I = any, O = any> = (x: number, input: I) => O;
+// A dictionary of Fn1.
+type Fn1Group = { [key: string]: Fn1 };
+// goal: extend every function in Fn1Group to accept a number
+// as the first parameter and it's original input as the second
+// parameter.
+type Fn2Group<T extends Fn1Group> = { [key in keyof T]: Fn2 }; // any does not work
+
+// Example:
+const A = {
+  foo: (y: number) => y,
+  bar: (s: string) => s,
+};
+// B has same keys as A but all functions
+// have a second paramater and return type of "any".
+declare const B: Fn2Group<typeof A>;
+*/
