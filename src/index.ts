@@ -1,6 +1,6 @@
 import app from "./app";
 
-app({ title: "ugh" });
+app();
 
 declare const module: any;
 declare const window: any;
