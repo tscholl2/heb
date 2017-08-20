@@ -24,30 +24,31 @@ declare module "hyperapp" {
   export type State = Object;
 
   // this is how actions are used
-  export type Action<D = any> = (data: D) => any;
+  export type ActionResult<S extends State> = Partial<S> | void | Promise<Partial<S>>;
+  export type Action<S extends State, D = any> = (data: D) => any;
 
-  export type Actions = { [domain: string]: Action | { [name: string]: Action } };
+  export type Actions<S extends State> = { [domain: string]: Action<S> | { [name: string]: Action<S> } };
 
   // this is how actions are defined
-  export type DefAction<S extends State, A extends Actions, D = any> = (
+  export type DefAction<S extends State, A extends Actions<S>, D = any> = (
     state: S,
     actions: A,
     data: D,
   ) => Partial<S> | Promise<Partial<S>> | undefined | void;
 
-  export type DefActions<S extends State, A extends Actions> = {
+  export type DefActions<S extends State, A extends Actions<S>> = {
     [domain in keyof A]: { [name in keyof A[domain]]: DefAction<S, A> } | DefAction<S, A>
   };
 
   // this is how events are defined
 
-  export type Event<S extends State, A extends Actions, DataIn = any, DataOut = DataIn> = (
+  export type Event<S extends State, A extends Actions<S>, DataIn = any, DataOut = DataIn> = (
     state: S,
     actions: A,
     data: DataIn,
   ) => DataOut | void;
 
-  export type DefaultEvents<S extends State, A extends Actions> = {
+  export type DefaultEvents<S extends State, A extends Actions<S>> = {
     load: Event<S, A, HTMLElement, VirtualNode>;
     render: Event<S, A, View<S, A>>;
     action: Event<S, A, { name: string; data: any }>;
@@ -55,7 +56,7 @@ declare module "hyperapp" {
     update: Event<S, A, S, void | boolean>; // (state, actions, nextstate)
   };
 
-  export type Events<S extends State, A extends Actions> = { [name: string]: Event<S, A> };
+  export type Events<S extends State, A extends Actions<S>> = { [name: string]: Event<S, A> };
 
   export interface View<State, Actions, Data = any> {
     (state: State, actions: Actions): VirtualNode<Data>;
@@ -63,7 +64,7 @@ declare module "hyperapp" {
 
   export type Emit<Events, K extends keyof Events = keyof Events> = (name: K, data?: any) => any;
 
-  export type Mixin<S extends State = {}, A extends Actions = {}, E extends Events<S, A> = {}> = (
+  export type Mixin<S extends State = {}, A extends Actions<S> = {}, E extends Events<S, A> = {}> = (
     emit: Emit<E & DefaultEvents<S, A>>,
   ) => {
     state?: Partial<S>;
@@ -72,7 +73,7 @@ declare module "hyperapp" {
     mixins?: Array<Mixin<S, any, any>>;
   };
 
-  export function app<S extends State, A extends Actions, E extends Events<S, A>>(app: {
+  export function app<S extends State, A extends Actions<S>, E extends Events<S, A>>(app: {
     state?: S;
     actions?: Partial<DefActions<S, A>>;
     events?: Partial<E & DefaultEvents<S, A>>;
