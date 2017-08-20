@@ -36,7 +36,7 @@ function routeMatcher(route: string): (path: string) => Params | undefined {
 }
 
 // Given a list of routes, this will return a function
-// that matches a given path to the first route.
+// that matches a given path to the first possible route.
 // That function will return the index of the match
 // along with the matched parameters.
 export function routesMatcher(
