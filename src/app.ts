@@ -6,7 +6,7 @@ import { NewRouter } from "./components";
 
 const router = NewRouter([
   { route: "/", component: () => h("p", undefined, "home") },
-  { route: "/:id", component: ({ params: { id = "" } }) => h("p", undefined, `id = ${id}`) },
+  { route: "/:id", component: ({ params: { id } }) => h("p", undefined, `id = ${id}`) },
   { route: "*", component: () => h("p", undefined, "not found") },
 ]);
 
