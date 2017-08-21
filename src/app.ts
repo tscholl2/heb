@@ -1,4 +1,4 @@
-import { h, app } from "hyperapp";
+import { h, app, Emit, VirtualNode } from "hyperapp";
 import { mixins } from "./mixins";
 import { State, initialState } from "./state";
 import { actions, Actions } from "./actions";
@@ -10,10 +10,22 @@ const router = NewRouter([
   { route: "*", component: () => h("p", undefined, "not found") },
 ]);
 
+export let emit: Emit;
+
+export const NewWidget = <D>(view: (state: State, actions: Actions, data: D) => VirtualNode) => (
+  data: D,
+) => {
+  const [state, actions] = emit("getStateAndActions");
+  return view(state, actions, data);
+};
+
 export default (state = initialState) => {
-  app<State, Actions, { route: any }>({
+  emit = app<State, Actions>({
     state,
     actions,
+    events: {
+      getStateAndActions: (state, actions) => [state, actions],
+    },
     view: (state, actions) =>
       h(
         "div",
