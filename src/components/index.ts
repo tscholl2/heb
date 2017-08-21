@@ -13,3 +13,10 @@ export function NewRouter(
     return routes[match.index].component({ params: match.params }, ...children);
   };
 }
+
+import { NewWidget } from "../mixins/widgets";
+import { h } from "hyperapp";
+
+export const Link = NewWidget<{ path: string }>((props, ...children) =>
+  h("span", { onclick: () => props.actions.router.go(props.path) }, "link", ...children),
+);
