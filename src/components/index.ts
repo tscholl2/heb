@@ -14,7 +14,7 @@ export function NewRouter(
   };
 }
 
-import { NewWidget } from "../mixins/widgets";
+import { NewWidget } from "../utils/widget";
 import { h } from "hyperapp";
 
 export const Link = NewWidget<{ path: string }>((props, ...children) =>
