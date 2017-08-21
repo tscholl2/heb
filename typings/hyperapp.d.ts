@@ -50,7 +50,7 @@ declare module "hyperapp" {
     state: S,
     actions: A,
     data: DataIn,
-  ) => DataOut | void;
+  ) => DataOut;
 
   export type DefaultEvents<S extends State, A extends Actions<S>> = {
     load: Event<S, A, HTMLElement, VirtualNode>;
@@ -70,7 +70,7 @@ declare module "hyperapp" {
 
   // Emit is how events are fired
 
-  export type Emit<Events, K extends keyof Events = keyof Events> = (name: K, data?: any) => any;
+  export type Emit<E = { [key: string]: any }> = (name: keyof E, data?: any) => any;
 
   // a mixin allows additional actions/events/etc
 
@@ -89,10 +89,14 @@ declare module "hyperapp" {
 
   // how an app is created
 
-  export function app<S extends State, A extends Actions<S>, E extends Events<S, A>>(app: {
+  export function app<
+    S extends State,
+    A extends Actions<S>,
+    E extends Events<S, A> = Events<S, A>
+  >(app: {
     state?: S;
     actions?: Partial<DefActions<S, A>>;
-    events?: Partial<E & DefaultEvents<S, A>>;
+    events?: E;
     view: View<S, A>;
     mixins?: Array<Mixin<S, A, E & DefaultEvents<S, A>>>;
   }): Emit<E & DefaultEvents<S, A>>;
