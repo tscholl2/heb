@@ -11,7 +11,7 @@ const router = NewRouter([
 ]);
 
 export default (state = initialState) => {
-  const emit = app<State, Actions>({
+  app<State, Actions>({
     state,
     actions,
     view: (state, actions) =>
@@ -21,9 +21,10 @@ export default (state = initialState) => {
         h("h1", undefined, state.title),
         h("button", { onclick: () => actions.router.go("/p1") }, "hi"),
         router(state.path),
+        h("div", undefined, ["a", "b"]),
+        h("div", undefined, "a", "b"),
         Link({ path: "/p2" }),
       ),
     mixins,
   });
-  emit("ready");
 };

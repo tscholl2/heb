@@ -7,7 +7,10 @@ declare module "hyperapp" {
     children: (VirtualNode | string)[];
   }
 
+  // h("div",undefined,"a","b")
   export function h<D>(tag: string, data?: D, ...children: VirtualNode["children"]): VirtualNode<D>;
+  // h("div",undefined,["a","b"])
+  export function h<D>(tag: string, data?: D, children?: VirtualNode["children"]): VirtualNode<D>;
 
   type Component<I = any, O = I> = (
     data: I,
@@ -20,6 +23,12 @@ declare module "hyperapp" {
     ...children: VirtualNode["children"]
   ): VirtualNode<D>;
 
+  export function h<D>(
+    component: Component<D>,
+    data: D,
+    children: VirtualNode["children"],
+  ): VirtualNode<D>;
+
   // app function
 
   export type State = Object;
@@ -28,6 +37,7 @@ declare module "hyperapp" {
   export type ActionResult<S extends State> = Partial<S> | void | Promise<Partial<S>>;
   export type Action<S extends State, D = any> = (data: D) => ActionResult<S>;
 
+  // a bundle of actions
   export type Actions<S extends State> = {
     [domain: string]: Action<S> | { [name: string]: Action<S> };
   };
@@ -39,8 +49,9 @@ declare module "hyperapp" {
     data: D,
   ) => Partial<S> | Promise<Partial<S>> | undefined | void;
 
+  // a bundle of action definitions
   export type DefActions<S extends State, A extends Actions<S>> = {
-    [// TODO: we should be able to get the data type from Action to DefAction
+    [// TODO: we should be able to get the data type from Action to DefAction, see below
     domain in keyof A]: { [name in keyof A[domain]]: DefAction<S, A> } | DefAction<S, A>
   };
 
@@ -62,7 +73,7 @@ declare module "hyperapp" {
 
   export type Events<S extends State, A extends Actions<S>> = { [name: string]: Event<S, A> };
 
-  // the view is the root component
+  // View is the root component
 
   export interface View<State, Actions, Data = any> {
     (state: State, actions: Actions): VirtualNode<Data>;
@@ -70,14 +81,17 @@ declare module "hyperapp" {
 
   // Emit is how events are fired
 
-  export type Emit<E = { [key: string]: any }> = (name: keyof E, data?: any) => any;
+  export type Emit<E extends { [key: string]: any }> = <K extends keyof E>(
+    name: K,
+    data?: any,
+  ) => any; // TODO can we infer the output somehow?
 
   // a mixin allows additional actions/events/etc
 
   export type Mixin<
     S extends State,
     A extends Actions<S>,
-    E extends Events<S, A> = Events<S, A> // TODO these aren't used
+    E extends Events<S, A> = Events<S, A> // TODO this isn't very useful
   > = (
     emit: Emit<E & DefaultEvents<S, A>>,
   ) => {
@@ -92,7 +106,7 @@ declare module "hyperapp" {
   export function app<
     S extends State,
     A extends Actions<S>,
-    E extends Events<S, A> = Events<S, A> // TODO these aren't used
+    E extends Events<S, A> = Events<S, A> // TODO this isn't very useful
   >(app: {
     state?: S;
     actions?: Partial<DefActions<S, A>>;
