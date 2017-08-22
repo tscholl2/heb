@@ -1,6 +1,12 @@
 declare module "hyperapp" {
   // h function
 
+  export interface LifeCycleMethods<D> {
+    oncreate?(node: Element): any;
+    onupdate?(node: Element, oldData: D): any;
+    onremove?(node: Element): any;
+  }
+
   export interface VirtualNode<D = undefined | {}> {
     tag: string;
     data: D;
@@ -8,14 +14,22 @@ declare module "hyperapp" {
   }
 
   type Component<I = any, O = I> = (
-    data: I,
+    data: I & LifeCycleMethods<O>,
     ...children: VirtualNode["children"]
   ) => VirtualNode<O>;
 
   // h("div",undefined,"a","b")
-  export function h<D>(tag: string, data?: D, ...children: VirtualNode["children"]): VirtualNode<D>;
+  export function h<D>(
+    tag: string,
+    data?: D & LifeCycleMethods<D>,
+    ...children: VirtualNode["children"]
+  ): VirtualNode<D>;
   // h("div",undefined,["a","b"])
-  export function h<D>(tag: string, data?: D, children?: VirtualNode["children"]): VirtualNode<D>;
+  export function h<D>(
+    tag: string,
+    data?: D & LifeCycleMethods<D>,
+    children?: VirtualNode["children"],
+  ): VirtualNode<D>;
 
   export function h<I, O>(
     component: Component<I, O>,
