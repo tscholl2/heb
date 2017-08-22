@@ -31,6 +31,8 @@ declare module "hyperapp" {
     children?: VirtualNode["children"],
   ): VirtualNode<D>;
 
+  export function h<undefined>(component: Component<{}>): VirtualNode;
+
   export function h<I, O>(
     component: Component<I, O>,
     data: I,

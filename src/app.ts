@@ -18,7 +18,6 @@ export default (state = initialState) => {
       h(
         "div",
         undefined,
-        h("h1", { oncreate: node => console.log("created", node) }, state.title),
         h("button", { onclick: () => actions.router.go("/p1") }, "hi"),
         router(state.path),
         h("div", undefined, ["a", "b"]),
