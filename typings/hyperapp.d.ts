@@ -7,27 +7,27 @@ declare module "hyperapp" {
     children: (VirtualNode | string)[];
   }
 
-  // h("div",undefined,"a","b")
-  export function h<D>(tag: string, data?: D, ...children: VirtualNode["children"]): VirtualNode<D>;
-  // h("div",undefined,["a","b"])
-  export function h<D>(tag: string, data?: D, children?: VirtualNode["children"]): VirtualNode<D>;
-
   type Component<I = any, O = I> = (
     data: I,
     ...children: VirtualNode["children"]
   ) => VirtualNode<O>;
 
-  export function h<D>(
-    component: Component<D>,
-    data: D,
-    ...children: VirtualNode["children"]
-  ): VirtualNode<D>;
+  // h("div",undefined,"a","b")
+  export function h<D>(tag: string, data?: D, ...children: VirtualNode["children"]): VirtualNode<D>;
+  // h("div",undefined,["a","b"])
+  export function h<D>(tag: string, data?: D, children?: VirtualNode["children"]): VirtualNode<D>;
 
-  export function h<D>(
-    component: Component<D>,
-    data: D,
+  export function h<I, O>(
+    component: Component<I, O>,
+    data: I,
+    ...children: VirtualNode["children"]
+  ): VirtualNode<O>;
+
+  export function h<I, O>(
+    component: Component<I, O>,
+    data: I,
     children: VirtualNode["children"],
-  ): VirtualNode<D>;
+  ): VirtualNode<O>;
 
   // app function
 
