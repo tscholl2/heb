@@ -6,6 +6,9 @@ export interface Actions extends HActions<State> {
     set: (path: string) => { path: string };
     go: (path: string) => void;
   };
+  sortBy: (ascending: boolean) => void;
 }
 
-export const actions: Partial<DefActions<State, Actions>> = {};
+export const actions: Partial<DefActions<State, Actions>> = {
+  sortBy: (_, __, ascending) => ({ sortAscending: ascending }),
+};

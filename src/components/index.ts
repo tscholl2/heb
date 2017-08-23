@@ -20,3 +20,6 @@ import { h } from "hyperapp";
 export const Link = NewWidget<{ path: string }>((props, ...children) =>
   h("span", { onclick: () => props.actions.router.go(props.path) }, "link", ...children),
 );
+
+export const Markdown = (md: string) =>
+  console.log("calling markdown parse") || h("div", undefined, hP(md));
