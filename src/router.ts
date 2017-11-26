@@ -21,9 +21,7 @@ function getURL() {
   return `${p}${s}${h}`;
 }
 
-export const module = () => ({ state, actions });
+export const newModule = () => ({ state, actions });
 
-export const routerListener = (actions: any) => {
-  addEventListener("popstate", () => actions.router.go(getURL()));
-  return actions;
-};
+export const newListener = ({ router: { go } }: any) =>
+  addEventListener("popstate", () => go(getURL()));
