@@ -28,15 +28,23 @@ export function start(state = initialState) {
           h("button", { onclick: actions.up }, "+"),
           h("button", { onclick: actions.down }, "-"),
           h("h1", undefined, `page: ${state.router.url}`),
-          h("button", { onclick: () => actions.router.go(`/page${state.count}`) }, "->"),
+          h(
+            "button",
+            { onclick: () => actions.router.go(`/page${state.count}`) },
+            "->",
+          ),
           Switch({
             url: state.router.url,
             routes: [
               {
                 route: "/page:id",
-                component: ({ params }) => h("h6", undefined, `Page #${params.id}`),
+                component: ({ params }) =>
+                  h("h6", undefined, `Page #${params.id}`),
               },
-              { route: "*", component: () => h("h1", undefined, "404 - page not found") },
+              {
+                route: "*",
+                component: () => h("h1", undefined, "404 - page not found"),
+              },
             ],
           }),
         ],

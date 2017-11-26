@@ -6,9 +6,8 @@
     "bundle": "NODE_ENV=production webpack -p --progress --colors",
     "bundle-dev": "NODE_ENV=development webpack --progress --colors",
     "bundle-analyzer": "NODE_ENV=bundle-analyzer webpack --progress --colors",
-    "lint": "prettier --trailing-comma all --write \"src/**/*.ts\"",
-    "test": "mocha --recursive dist/test",
-    "bench": "node dist/benchmark/index.js"
+    "lint": "prettier --print-width 100 --trailing-comma all --write \"src/**/*.ts\"",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' ts-node $(find ./src -name '*_test.ts')"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^3.4.0",
@@ -17,6 +16,8 @@
     "prettier": "^1.8.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
+    "tape": "^4.8.0",
+    "ts-node": "^3.3.0",
     "typescript": "^2.6.1",
     "webpack": "^3.8.1",
     "webpack-bundle-analyzer": "^2.9.1",

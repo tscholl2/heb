@@ -38,7 +38,9 @@ function routeMatcher(route: string): (path: string) => Params | undefined {
     // "zip" the lists into an object. For example, ["id"],["123"] ---> {"id":"123"}.
     // If the route has no paramaters but matches (e.g. `"*"`), then
     // the matcher will return `{}`.
-    return !m ? undefined : parameters.reduce((p, n, i) => Object.assign(p, { [n]: m[i + 1] }), {});
+    return !m
+      ? undefined
+      : parameters.reduce((p, n, i) => Object.assign(p, { [n]: m[i + 1] }), {});
   };
 }
 

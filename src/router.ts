@@ -37,7 +37,10 @@ export const newListener = ({ router: { go } }: any) => {
 
 export interface SwitchProps {
   url: string;
-  routes: Array<{ route: string; component: Component<{ params: Params }, any> }>;
+  routes: Array<{
+    route: string;
+    component: Component<{ params: Params }, any>;
+  }>;
 }
 
 export const Switch: Component<SwitchProps, any> = (props, children) => {
