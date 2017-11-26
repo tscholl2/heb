@@ -1,29 +1,28 @@
-import { h, app } from "hyperapp";
-import { mixins } from "./mixins";
-import { State, initialState } from "./state";
-import { actions, Actions } from "./actions";
-import { NewRouter, Link } from "./components";
+declare const require: any;
+const { h, app } = require("hyperapp");
 
-const router = NewRouter([
-  { route: "/", component: () => h("p", undefined, "home") },
-  { route: "/:id", component: ({ params: { id } }) => h("p", undefined, `id = ${id}`) },
-  { route: "*", component: () => h("p", undefined, "not found") },
-]);
+import { module as router, routerListener } from "./router";
 
-export default (state = initialState) => {
-  app<State, Actions>({
-    state,
-    actions,
-    view: (state, actions) =>
-      h(
-        "div",
-        undefined,
-        h("button", { onclick: () => actions.router.go("/p1") }, "hi"),
-        router(state.path),
-        h("div", undefined, ["a", "b"]),
-        h("div", undefined, "a", "b"),
-        Link({ path: "/p2" }),
-      ),
-    mixins,
-  });
-};
+declare const window: any;
+
+export const App = (state = { count: 0 }) =>
+  routerListener(
+    app({
+      state: state,
+      view: (state: any, actions: any) =>
+        h(
+          "main",
+          { onupdate: () => (window["state"] = state) }, // better way to do this
+          h("h1", undefined, state.count),
+          h("button", { onclick: actions.up }, "+"),
+          h("button", { onclick: actions.down }, "-"),
+          h("h1", undefined, `page: ${state.router.url}`),
+          h("button", { onclick: () => actions.router.go(`/page${state.count}`) }, "->"),
+        ),
+      actions: {
+        down: (state: any) => ({ count: state.count - 1 }),
+        up: (state: any) => ({ count: state.count + 1 }),
+      },
+      modules: { router: router() },
+    }),
+  );

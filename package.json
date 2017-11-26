@@ -2,31 +2,31 @@
   "name": "hweb",
   "version": "0.0.1",
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server --hot --progress --colors --compress --port 8080 --host '0.0.0.0' --history-api-fallback --content-base 'www'",
-    "bundle": "NODE_ENV=production webpack -p --progress --colors",
+    "dev": "webpack-dev-server --hot --progress --colors --compress --port 8080 --host '0.0.0.0' --history-api-fallback --content-base 'www'",
+    "bundle": "webpack -p --progress --colors",
     "bundle-dev": "webpack --progress --colors",
-    "bundle-analyzer": "NODE_ENV=bundle-analyzer webpack --progress --colors",
+    "bundle-analyzer": "webpack --progress --colors",
     "lint": "prettier --trailing-comma all --write \"src/**/*.ts\"",
     "test": "mocha --recursive dist/test",
     "bench": "node dist/benchmark/index.js"
   },
-  "dependencies": {
-    "hyperapp": "^0.12.0",
-    "tslib": "^1.7.1"
-  },
   "devDependencies": {
-    "awesome-typescript-loader": "^3.2.3",
-    "css-loader": "^0.28.5",
-    "file-loader": "^0.11.2",
+    "awesome-typescript-loader": "^3.4.0",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.5",
     "hyperapp-webpack-hmr": "^1.0.3",
-    "postcss-loader": "^2.0.6",
-    "prettier": "^1.5.3",
+    "postcss-loader": "^2.0.9",
+    "prettier": "^1.8.2",
     "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
-    "typescript": "^2.5.1",
-    "webpack": "^3.5.5",
-    "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.7.1",
-    "webpack-merge": "^4.1.0"
+    "style-loader": "^0.19.0",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1",
+    "webpack-bundle-analyzer": "^2.9.1",
+    "webpack-dev-server": "^2.9.4",
+    "webpack-merge": "^4.1.1"
+  },
+  "dependencies": {
+    "hyperapp": "0.16.0",
+    "tslib": "^1.8.0"
   }
 }

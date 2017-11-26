@@ -5,6 +5,7 @@ const base = require('./base');
 module.exports = merge(base, {
   devtool: undefined,
   plugins: [
+    new webpack.DefinePlugin({ ["process.env.NODE_ENV"]: JSON.stringify("production") }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,

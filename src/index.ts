@@ -1,14 +1,14 @@
-import app from "./app";
+import { App } from "./app";
 
-app();
+App();
 
 declare const module: any;
 declare const window: any;
 if (process.env.NODE_ENV === "development") {
   if (module.hot) {
-    module.hot.accept("./app", function() {
+    module.hot.accept("./app", () => {
       document.body.innerHTML = "";
-      app(window["state"]);
+      App(window["state"]);
     });
   }
 }
