@@ -2,10 +2,10 @@
   "name": "hweb",
   "version": "0.0.1",
   "scripts": {
-    "dev": "webpack-dev-server --hot --progress --colors --compress --port 8080 --host '0.0.0.0' --history-api-fallback --content-base 'www'",
-    "bundle": "webpack -p --progress --colors",
-    "bundle-dev": "webpack --progress --colors",
-    "bundle-analyzer": "webpack --progress --colors",
+    "dev": "NODE_ENV=development webpack-dev-server --hot --progress --colors --compress --port 8080 --host '0.0.0.0' --history-api-fallback --content-base 'www'",
+    "bundle": "NODE_ENV=production webpack -p --progress --colors",
+    "bundle-dev": "NODE_ENV=development webpack --progress --colors",
+    "bundle-analyzer": "NODE_ENV=bundle-analyzer webpack --progress --colors",
     "lint": "prettier --trailing-comma all --write \"src/**/*.ts\"",
     "test": "mocha --recursive dist/test",
     "bench": "node dist/benchmark/index.js"
@@ -13,8 +13,6 @@
   "devDependencies": {
     "awesome-typescript-loader": "^3.4.0",
     "css-loader": "^0.28.7",
-    "file-loader": "^1.1.5",
-    "hyperapp-webpack-hmr": "^1.0.3",
     "postcss-loader": "^2.0.9",
     "prettier": "^1.8.2",
     "sass-loader": "^6.0.6",

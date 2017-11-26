@@ -20,7 +20,7 @@ export type Params = { [key: string]: string };
 function routeMatcher(route: string): (path: string) => Params | undefined {
   // Find all the parameter names in the route.
   // The `|| []` allows for `route = "*"`.
-  const parameters = route.match(/:(\w+)/g) || [];
+  const parameters = (route.match(/:(\w+)/g) || []).map(s => s.substr(1)); // remove the ":"
   const re = new RegExp(
     // Build a regexp to compare paths to this route by
     `^${route
@@ -50,7 +50,7 @@ function routeMatcher(route: string): (path: string) => Params | undefined {
  *
  * Example:
  * ```
- * const matcher = routesMatcher(["/foo/:id", "/bar/:id1/:id2", "/zoo"].map(routeMatcher));
+ * const matcher = routesMatcher(["/foo/:id", "/bar/:id1/:id2", "/zoo", "/goo:id"]);
  * console.log(matcher("/foo/2")); // { index: 0, params: { id: "2" } }
  * console.log(matcher("/bar/3/5")); // { index: 1, params: { id1: "3", id2: "5" } }
  * console.log(matcher("/foo/1")); // { index: 0, params: { id: "1" } }
@@ -58,6 +58,7 @@ function routeMatcher(route: string): (path: string) => Params | undefined {
  * console.log(matcher("/goo")); // undefined
  * console.log(matcher("/zoo/1")); // undefined
  * console.log(matcher("/bar/3")); // undefined
+ * console.log(matcher("/goo7")); // { index: 3, params: { id: "7" } }
  * ```
  *
  * @param {Array<string>} routes
