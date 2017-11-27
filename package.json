@@ -13,7 +13,7 @@
   "devDependencies": {
     "awesome-typescript-loader": "^3.4.0",
     "css-loader": "^0.28.7",
-    "node-sass": "latest",
+    "node-sass": "^4.7.2",
     "postcss-loader": "^2.0.9",
     "prettier": "^1.8.2",
     "sass-loader": "^6.0.6",
