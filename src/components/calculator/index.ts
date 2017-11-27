@@ -2,26 +2,16 @@ import { h } from "hyperapp";
 
 import "./style.scss";
 
-export const initialState = { value: "" };
-
-export type IState = typeof initialState;
-
-export type IActions = {
-  update<S extends Partial<IState>>(s: S): S;
-};
-
-export const actions = { update: () => (s: Partial<IState>) => s };
-
 export interface ICalculatorProps {
-  state: IState;
-  actions: IActions;
+  value: string;
+  update(value: string): void;
 }
 
-export function Calculator({ state: { value }, actions: { update } }: ICalculatorProps) {
+export function Calculator({ value = "", update }: ICalculatorProps) {
   const B = (c: string, f?: any) =>
     h(
       "button",
-      { class: "calculator-button", onclick: f ? f : () => update({ value: value + c }) },
+      { class: "calculator-button", onclick: f ? f : () => update(value + c) },
       c,
     );
   const R = (children: any) => h("div", { class: "calculator-buttons-row" }, children);
@@ -34,8 +24,8 @@ export function Calculator({ state: { value }, actions: { update } }: ICalculato
       R([
         B("*"),
         B("/"),
-        B("clear", () => update({ value: "" })),
-        B("=", () => update({ value: `${eval(value)}` })),
+        B("clear", () => update("")),
+        B("=", () => update(`${eval(value)}`)),
       ]),
     ]),
   ]);

@@ -6,13 +6,7 @@ import {
   IState as IRouterState,
   IActions as IRouterActions,
 } from "./router";
-import {
-  Calculator,
-  initialState as calculatorInitialState,
-  actions as calculatorActions,
-  IState as ICalculatorState,
-  IActions as ICalculatorActions,
-} from "./components/calculator";
+import { Calculator } from "./components/calculator";
 import {
   Graph,
   initialState as graphInitialState,
@@ -24,22 +18,22 @@ import { Switch } from "./components/switch";
 
 const state = {
   router: routerInitialState,
-  calculator: calculatorInitialState,
   graph: graphInitialState,
-};
-const actions = {
-  router: routerActions,
-  calculator: calculatorActions,
-  graph: graphActions,
+  calculator: { value: "" },
 };
 type IState = {
   router: IRouterState;
-  calculator: ICalculatorState;
   graph: IGraphState;
+  calculator: { value: string };
+};
+const actions = {
+  calculator: { update: () => (value: string) => ({ value }) },
+  router: routerActions,
+  graph: graphActions,
 };
 type IActions = {
+  calculator: { update: (value: string) => any };
   router: IRouterActions;
-  calculator: ICalculatorActions;
   graph: IGraphActions;
 };
 
@@ -72,8 +66,8 @@ export function start(initialState = state) {
                   route: "/calculator",
                   component: () =>
                     Calculator({
-                      state: state.calculator,
-                      actions: actions.calculator,
+                      value: state.calculator.value,
+                      update: actions.calculator.update,
                     }),
                 },
                 {
