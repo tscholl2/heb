@@ -4,14 +4,16 @@
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server --hot --progress --colors --compress --port 8080 --host '0.0.0.0' --history-api-fallback --content-base 'www'",
     "bundle": "NODE_ENV=production webpack -p --progress --colors",
+    "postbundle": "gzip -c www/lib/bundle.js > www/lib/bundle.js.gz",
     "bundle-dev": "NODE_ENV=development webpack --progress --colors",
     "bundle-analyzer": "NODE_ENV=bundle-analyzer webpack --progress --colors",
     "lint": "prettier --print-width 100 --trailing-comma all --write \"src/**/*.ts\"",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' ts-node $(find ./src -name '*_test.ts') | tap-summary"
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' ts-node -F test.ts $(find ./src -name '*_test.ts') | tap-summary"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^3.4.0",
     "css-loader": "^0.28.7",
+    "node-sass": "latest",
     "postcss-loader": "^2.0.9",
     "prettier": "^1.8.2",
     "sass-loader": "^6.0.6",

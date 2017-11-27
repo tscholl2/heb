@@ -20,7 +20,7 @@ declare module "hyperapp" {
     data?: LifeCycleMethods<LifeCycleMethods<D> & D> & D,
     children?: VirtualNode["children"],
   ): VirtualNode<LifeCycleMethods<D> & D>;
-  
+
   type Component<P, O = P> = (
     props: P & LifeCycleMethods<O>,
     children?: VirtualNodeChildren | VirtualNodeChild,
@@ -39,16 +39,20 @@ declare module "hyperapp" {
     | Promise<Partial<S>>
     | void
     | Promise<void>;
+
   export type UserDefinedAction<S extends State, D = any> = (data: D) => ActionResult<S>;
+
   export type UserDefinedActions<S extends State> = {
-    [key: string]: UserDefinedAction<S> | UserDefinedActions<S>;
+    [key: string]: UserDefinedAction<S> | UserDefinedActions<any>;
   };
+
   export type AppDefinedAction<S extends State, A extends UserDefinedActions<S>, D = any> = (
     state: S,
     actions: A,
   ) => UserDefinedAction<S, D>;
+
   export type AppDefinedActions<S extends State, A extends UserDefinedActions<S>> = {
-    [key in keyof A]: ((state: S, actions: A) => A[key]) | AppDefinedActions<S, any>
+    [key in keyof A]: ((state: S, actions: A) => A[key]) | AppDefinedActions<any, any>
   };
 
   export function app<S extends State, A extends UserDefinedActions<S>>(app: {

@@ -2,6 +2,63 @@
 
 <head>
   <meta charset="utf-8"></meta>
+  <style>
+    body {
+      margin: 10px;
+    }
+
+    .container {
+      width: 100%;
+      min-height: 50%;
+      display: grid;
+      grid-gap: 20px;
+    }
+
+    @media (max-width: 599px) {
+      .container {
+        grid-template: 
+        [row1-start] "header" 25px [row1-end]
+        [row2-start] "sidebar" auto [row2-end]
+        [row3-start] "content" auto [row3-end]
+        [row4-start] "footer" 25px [row4-end]
+        / 1fr;
+      }
+    }
+
+    @media (min-width: 600px) {
+      .container {
+        grid-template: 
+        [row1-start] "header header" 25px [row1-end]
+        [row2-start] "sidebar content" auto [row2-end]
+        [row3-start] "footer footer" 25px [row3-end]
+        / 1fr 4fr;
+      }
+    }
+
+    header {
+      grid-area: header;
+      text-align: center;
+    }
+
+    main {
+      grid-area: content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    aside {
+      grid-area: sidebar;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    footer {
+      grid-area: footer;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
