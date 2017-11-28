@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server --hot --progress --colors --compress --port 8080 --host '0.0.0.0' --history-api-fallback --content-base 'www'",
     "bundle": "NODE_ENV=production webpack -p --progress --colors",
-    "postbundle": "gzip -c www/lib/bundle.js > www/lib/bundle.js.gz",
+    "postbundle": "gzip -c www/lib/bundle.js > www/lib/bundle.js.gz && ls -lah | grep bundle",
     "bundle-dev": "NODE_ENV=development webpack --progress --colors",
     "bundle-analyzer": "NODE_ENV=bundle-analyzer webpack --progress --colors",
     "lint": "prettier --print-width 100 --trailing-comma all --write \"src/**/*.ts\"",
