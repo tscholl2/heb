@@ -7,7 +7,7 @@ import {
 } from "./router";
 import { Calculator } from "./components/calculator";
 import { Graph } from "./components/graph";
-import { Switch } from "./components/switch";
+import { StaticSwitch } from "./components/switch";
 
 const initialState = {
   router: routerInitialState,
@@ -20,6 +20,8 @@ type IActions = {
   calculator: { update(value: string): Partial<IState["calculator"]> };
   graph: { update(value: Partial<IState["graph"]>): Partial<IState["graph"]> };
 };
+
+const Switch2 = StaticSwitch(["/page:id", "/calculator", "/graph", "*"]);
 
 export function start(state = initialState) {
   const appActions = app<IState, IActions>({
@@ -40,6 +42,25 @@ export function start(state = initialState) {
             h("button", { onclick: () => actions.router.go("/graph") }, "Graph"),
             h("button", { onclick: () => actions.router.go("/page3") }, "About"),
           ]),
+          h(
+            "main",
+            undefined,
+            h(Switch2, {
+              path: state.router.path,
+              components: [
+                // TODO this shouldnt be manually typed
+                ({ params }: any) => h("h6", undefined, `Page #${params.id}`),
+                () =>
+                  Calculator({
+                    value: state.calculator.value,
+                    update: actions.calculator.update,
+                  }),
+                () => Graph({ ...state.graph, update: actions.graph.update }),
+                () => h("h1", undefined, "404 - page not found"),
+              ],
+            }),
+          ),
+          /*
           h(
             "main",
             undefined,
@@ -69,6 +90,7 @@ export function start(state = initialState) {
               ],
             }),
           ),
+          */
           h("footer", undefined, "Footer"),
         ],
       ),
