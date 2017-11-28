@@ -20,13 +20,6 @@ export type IActions = {
   go: (url: string) => Partial<IState>;
 };
 
-function getURL() {
-  const p = location.pathname;
-  const s = location.search ? `?${location.search}` : "";
-  const h = location.hash ? `#${location.hash}` : "";
-  return `${p}${s}${h}`;
-}
-
 // Hot-reloading may add lots of new listeners, so keep track
 let oldListener: any;
 export const newListener = ({ router: { go } }: any) => {
@@ -34,3 +27,10 @@ export const newListener = ({ router: { go } }: any) => {
   oldListener = () => go(getURL());
   addEventListener("popstate", oldListener);
 };
+
+/**
+ * Returns the url the browser is currently at.
+ */
+function getURL() {
+  return `${window.location.pathname}${window.location.search}${window.location.hash}`;
+}

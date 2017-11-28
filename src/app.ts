@@ -3,38 +3,27 @@ import {
   newListener,
   initialState as routerInitialState,
   actions as routerActions,
-  IState as IRouterState,
   IActions as IRouterActions,
 } from "./router";
 import { Calculator } from "./components/calculator";
-import {
-  Graph,
-  initialState as graphInitialState,
-  actions as graphActions,
-  IState as IGraphState,
-  IActions as IGraphActions,
-} from "./components/graph";
+import { Graph } from "./components/graph";
 import { Switch } from "./components/switch";
 
 const state = {
   router: routerInitialState,
-  graph: graphInitialState,
+  graph: { f: "3*sin(x)", a: 0, b: 20, N: 100 },
   calculator: { value: "" },
 };
-type IState = {
-  router: IRouterState;
-  graph: IGraphState;
-  calculator: { value: string };
-};
+type IState = typeof state;
 const actions = {
-  calculator: { update: () => (value: string) => ({ value }) },
   router: routerActions,
-  graph: graphActions,
+  calculator: { update: () => (value: string) => ({ value }) },
+  graph: { update: () => (S: Partial<typeof state.graph>) => S },
 };
 type IActions = {
-  calculator: { update: (value: string) => any };
   router: IRouterActions;
-  graph: IGraphActions;
+  calculator: { update: (value: string) => any };
+  graph: { update: (value: Partial<typeof state.graph>) => any };
 };
 
 export function start(initialState = state) {
@@ -72,7 +61,7 @@ export function start(initialState = state) {
                 },
                 {
                   route: "/graph",
-                  component: () => Graph({ state: state.graph, actions: actions.graph }),
+                  component: () => Graph({ ...state.graph, update: actions.graph.update }),
                 },
                 {
                   route: "*",
