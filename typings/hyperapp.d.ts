@@ -2,9 +2,9 @@
 
 declare module "hyperapp" {
   export interface LifeCycleMethods<D> {
-    oncreate?(node: Element): any;
-    onupdate?(node: Element, oldData: D): any;
-    onremove?(node: Element): any;
+    oncreate?(node: Element): void;
+    onupdate?(node: Element, oldData: D): void;
+    onremove?(node: Element, done: () => void): void;
   }
 
   export interface VirtualNode<D = {} | undefined> {
@@ -13,7 +13,7 @@ declare module "hyperapp" {
     children: VirtualNodeChildren | VirtualNodeChild;
   }
   export type VirtualNodeChild = VirtualNode | string | number | undefined;
-  export interface VirtualNodeChildren extends Array<VirtualNodeChildren | VirtualNodeChild> {}
+  export interface VirtualNodeChildren extends Array<VirtualNodeChildren | VirtualNodeChild> { }
 
   export function h<D>(
     tag: string,
