@@ -73,5 +73,5 @@ export function start(state = initialState) {
         ],
       ),
   });
-  newListener(appActions);
+  newListener(appActions.router.go);
 }

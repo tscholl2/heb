@@ -3,9 +3,12 @@ export const initialState = {
 };
 
 export type IState = typeof initialState;
+export type IActions = {
+  go: (url: string) => (state: IState) => Partial<IState> | undefined;
+};
 
-export const actions = {
-  go: (url: string) => (state: IState) => {
+export const actions: IActions = {
+  go: url => state => {
     if (url !== getURL()) {
       history.pushState({}, "", url);
     }
@@ -16,13 +19,9 @@ export const actions = {
   },
 };
 
-export type IActions = {
-  go: (url: string) => any;
-};
-
 // Hot-reloading may add lots of new listeners, so keep track
 let oldListener: any;
-export const newListener = ({ router: { go } }: any) => {
+export const newListener = (go: (path: string) => any) => {
   if (oldListener) removeEventListener("popstate", oldListener);
   oldListener = () => go(getURL());
   addEventListener("popstate", oldListener);
