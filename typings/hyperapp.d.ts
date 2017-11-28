@@ -21,43 +21,37 @@ declare module "hyperapp" {
     children?: VirtualNode["children"],
   ): VirtualNode<LifeCycleMethods<D> & D>;
 
-  type Component<P, O = P> = (
+  type IComponent<P, O = any> = (
     props: P & LifeCycleMethods<O>,
     children?: VirtualNodeChildren | VirtualNodeChild,
   ) => VirtualNode<O> | undefined;
 
   export function h<I, O>(
-    component: Component<I, O>,
+    component: IComponent<I, O>,
     data: I,
     children?: VirtualNode["children"],
   ): VirtualNode<O>;
 
-  export type State = Object;
+  export type IState = Object;
 
-  export type ActionResult<S extends State> =
+  export type IActionResult<S extends IState> =
     | Partial<S>
     | Promise<Partial<S>>
     | void
     | Promise<void>;
 
-  export type UserDefinedAction<S extends State, D = any> = (data: D) => ActionResult<S>;
+  export type IAction<S extends IState, D = any> =
+    | ((data: D) => IActionResult<S>)
+    | ((data: D) => (state: S) => IActionResult<S>)
+    | ((data: D) => (state: S) => (actions: IActions<S>) => IActionResult<S>);
 
-  export type UserDefinedActions<S extends State> = {
-    [key: string]: UserDefinedAction<S> | UserDefinedActions<any>;
+  export type IActions<S extends IState> = {
+    [key: string]: IAction<S> | IActions<any>;
   };
 
-  export type AppDefinedAction<S extends State, A extends UserDefinedActions<S>, D = any> = (
-    state: S,
-    actions: A,
-  ) => UserDefinedAction<S, D>;
-
-  export type AppDefinedActions<S extends State, A extends UserDefinedActions<S>> = {
-    [key in keyof A]: ((state: S, actions: A) => A[key]) | AppDefinedActions<any, any>
-  };
-
-  export function app<S extends State, A extends UserDefinedActions<S>>(app: {
-    view: (state: S, actions: A) => VirtualNode;
+  export function app<S extends IState, A extends IActions<S>>(app: {
     state: S;
-    actions: AppDefinedActions<S, A>;
+    actions: A;
+    view: (state: S) => (actions: A) => VirtualNode;
   }): A;
 }

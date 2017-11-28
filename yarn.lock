@@ -1968,9 +1968,9 @@ https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
-hyperapp@^0.16.0:
+"hyperapp@git+https://github.com/hyperapp/hyperapp.git#0c952d7":
   version "0.16.0"
-  resolved "https://registry.yarnpkg.com/hyperapp/-/hyperapp-0.16.0.tgz#5ab1239f6fd638a0db52f7db49a94f2cc63ae051"
+  resolved "git+https://github.com/hyperapp/hyperapp.git#0c952d7174d151c59c3b1af71a50ec1dc23415e7"
 
 iconv-lite@0.4.19:
   version "0.4.19"

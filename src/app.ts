@@ -9,28 +9,27 @@ import { Calculator } from "./components/calculator";
 import { Graph } from "./components/graph";
 import { Switch } from "./components/switch";
 
-const state = {
+const initialState = {
   router: routerInitialState,
   graph: { f: "3*sin(x)", a: 0, b: 20, N: 100 },
   calculator: { value: "" },
 };
-type IState = typeof state;
-const actions = {
-  router: routerActions,
-  calculator: { update: () => (value: string) => ({ value }) },
-  graph: { update: () => (S: Partial<typeof state.graph>) => S },
-};
+type IState = typeof initialState;
 type IActions = {
   router: IRouterActions;
-  calculator: { update: (value: string) => any };
-  graph: { update: (value: Partial<typeof state.graph>) => any };
+  calculator: { update(value: string): Partial<IState["calculator"]> };
+  graph: { update(value: Partial<IState["graph"]>): Partial<IState["graph"]> };
 };
 
-export function start(initialState = state) {
+export function start(state = initialState) {
   const appActions = app<IState, IActions>({
-    state: initialState,
-    actions: actions,
-    view: (state, actions) =>
+    state: state,
+    actions: {
+      router: routerActions,
+      calculator: { update: value => ({ value }) },
+      graph: { update: s => s },
+    },
+    view: state => actions =>
       h(
         "div",
         { class: "container", onupdate: () => ((window as any)["state"] = state) }, // better way to do this?

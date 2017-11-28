@@ -28,7 +28,7 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
-    "hyperapp": "^0.16.0",
+    "hyperapp": "git+https://github.com/hyperapp/hyperapp.git#0c952d7",
     "tslib": "^1.8.0"
   }
 }

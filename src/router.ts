@@ -5,7 +5,7 @@ export const initialState = {
 export type IState = typeof initialState;
 
 export const actions = {
-  go: (state: any) => (url: string) => {
+  go: (url: string) => (state: IState) => {
     if (url !== getURL()) {
       history.pushState({}, "", url);
     }
@@ -17,7 +17,7 @@ export const actions = {
 };
 
 export type IActions = {
-  go: (url: string) => Partial<IState>;
+  go: (url: string) => any;
 };
 
 // Hot-reloading may add lots of new listeners, so keep track
