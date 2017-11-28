@@ -44,7 +44,7 @@ export function start(state = initialState) {
             "main",
             undefined,
             Switch({
-              url: state.router.url,
+              path: state.router.path,
               routes: [
                 {
                   route: "/page:id",

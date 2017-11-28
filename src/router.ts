@@ -1,5 +1,5 @@
 export const initialState = {
-  url: getURL(),
+  path: getCurrentPath(),
 };
 
 export type IState = typeof initialState;
@@ -8,28 +8,29 @@ export type IActions = {
 };
 
 export const actions: IActions = {
-  go: url => state => {
-    if (url !== getURL()) {
-      history.pushState({}, "", url);
+  go: path => state => {
+    if (path !== getCurrentPath()) {
+      history.pushState({}, "", path);
     }
-    if (url !== state.url) {
-      return { url };
+    if (path !== state.path) {
+      return { path };
     }
     return undefined;
   },
 };
 
-// Hot-reloading may add lots of new listeners, so keep track
+// Hot-reloading may add lots of new listeners, so keep track.
+// Typically this should only run once.
 let oldListener: any;
 export const newListener = (go: (path: string) => any) => {
   if (oldListener) removeEventListener("popstate", oldListener);
-  oldListener = () => go(getURL());
+  oldListener = () => go(getCurrentPath());
   addEventListener("popstate", oldListener);
 };
 
 /**
  * Returns the url the browser is currently at.
  */
-function getURL() {
+function getCurrentPath() {
   return `${window.location.pathname}${window.location.search}${window.location.hash}`;
 }

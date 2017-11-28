@@ -2,7 +2,7 @@ import { h, IComponent } from "hyperapp";
 import { routesMatcher, Params } from "../utils/url";
 
 export interface SwitchProps {
-  url: string;
+  path: string;
   routes: Array<{
     route: string;
     component: IComponent<{ params: Params }, any>;
@@ -11,7 +11,7 @@ export interface SwitchProps {
 
 export const Switch: IComponent<SwitchProps, any> = (props, children) => {
   const matcher = routesMatcher(props.routes.map(v => v.route));
-  const m = matcher(props.url);
+  const m = matcher(props.path);
   if (m === undefined) {
     return;
   }
