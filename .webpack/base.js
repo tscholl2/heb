@@ -12,7 +12,7 @@ const env = {
 };
 
 module.exports = {
-  entry: { bundle: ["./src/index.ts", "./src/style.scss"] },
+  entry: "./src/index.ts",
 
   output: {
     path: path.join(__dirname, "..", "www", "lib"),
@@ -42,15 +42,13 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        use: (process.NODE_ENV === "development"
-          ? ["style-loader"]
-          : [{ loader: "file-loader", options: { name: "[name].css" } }, "extract-loader"]
-        ).concat([
+        use: [
+          { loader: "style-loader" },
           {
             loader: "css-loader",
             options: {
               minimize: true,
-              importLoaders: 1,
+              importLoaders: 2,
             },
           },
           {
@@ -71,7 +69,7 @@ module.exports = {
               includePaths: [path.join(__dirname, "..", "node_modules")],
             },
           },
-        ]),
+        ],
       },
     ],
   },

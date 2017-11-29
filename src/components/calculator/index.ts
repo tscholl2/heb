@@ -1,6 +1,6 @@
 import { h } from "hyperapp";
 
-// import "./style.scss";
+import "./style.scss";
 
 export interface ICalculatorProps {
   value: string;
