@@ -3,13 +3,16 @@ const path = require("path");
 
 const env = {
   "process.env.COMMIT": JSON.stringify(
-    require("child_process").execSync("git rev-parse HEAD").toString().trim(),
+    require("child_process")
+      .execSync("git rev-parse HEAD")
+      .toString()
+      .trim(),
   ),
   "process.env.BUILD_TIME": JSON.stringify(new Date().toJSON()),
 };
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: { bundle: ["./src/index.ts", "./src/style.scss"] },
 
   output: {
     path: path.join(__dirname, "..", "www", "lib"),
@@ -39,11 +42,14 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        use: [
-          "style-loader",
+        use: (process.NODE_ENV === "development"
+          ? ["style-loader"]
+          : [{ loader: "file-loader", options: { name: "[name].css" } }, "extract-loader"]
+        ).concat([
           {
             loader: "css-loader",
             options: {
+              minimize: true,
               importLoaders: 1,
             },
           },
@@ -65,7 +71,7 @@ module.exports = {
               includePaths: [path.join(__dirname, "..", "node_modules")],
             },
           },
-        ],
+        ]),
       },
     ],
   },

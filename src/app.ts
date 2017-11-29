@@ -8,7 +8,8 @@ import {
 import { Calculator } from "./components/calculator";
 import { Graph } from "./components/graph";
 import { StaticSwitch } from "./components/switch";
-import "./style.scss";
+
+// import "./style.scss";
 
 const initialState = {
   router: routerInitialState,

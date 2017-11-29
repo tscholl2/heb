@@ -1,7 +1,7 @@
 import { h } from "hyperapp";
 import { memoize } from "../../utils/memoize";
 
-import "./style.scss";
+// import "./style.scss";
 
 export const evaluate = memoize((f: string, a = 0, b = 20, N = 100) => {
   f = f
