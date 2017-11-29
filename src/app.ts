@@ -46,11 +46,10 @@ export function start(state = initialState) {
           h(
             "main",
             undefined,
-            h(Switch2, {
+            Switch2({
               path: state.router.path,
               components: [
-                // TODO this shouldnt be manually typed
-                ({ params }: any) => h("h6", undefined, `Page #${params.id}`),
+                ({ params }) => h("h6", undefined, `Page #${params.id}`),
                 () =>
                   Calculator({
                     value: state.calculator.value,
