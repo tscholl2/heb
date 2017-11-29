@@ -1,0 +1,5 @@
+{
+  "prettier.trailingComma": "all",
+  "prettier.printWidth": 100,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
