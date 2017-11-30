@@ -12,6 +12,6 @@ test("route matcher", t => {
     { input: "/zoo/1", output: undefined },
     { input: "/bar/3", output: undefined },
     { input: "/goo7", output: { index: 3, params: { id: "7" } } },
-  ].forEach(a => t.deepEqual(matcher(a.input), a.output, a.input) || t.comment(a.input));
+  ].forEach(a => t.deepEqual(matcher(a.input), a.output, a.input));
   t.end();
 });
