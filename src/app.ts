@@ -8,6 +8,7 @@ import {
 import { Calculator } from "./components/calculator";
 import { Graph } from "./components/graph";
 import { StaticSwitch } from "./components/switch";
+import {persist} from './utils/persist';
 
 import "./style.scss";
 
@@ -26,7 +27,7 @@ type IActions = {
 const Switch2 = StaticSwitch(["/page:id", "/calculator", "/graph", "*"]);
 
 export function start(state = initialState) {
-  const appActions = app<IState, IActions>({
+  const appActions = (persist(app) as typeof app)<IState, IActions>({
     state: state,
     actions: {
       router: routerActions,
@@ -36,7 +37,7 @@ export function start(state = initialState) {
     view: state => actions =>
       h(
         "div",
-        { class: "container", onupdate: () => ((window as any)["state"] = state) }, // better way to do this?
+        { class: "container" },
         [
           h("header", undefined, "Sample App"),
           h("aside", undefined, [
