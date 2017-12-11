@@ -1,14 +1,14 @@
-import { start } from "./app";
+import { patch } from "picodom";
+import { Controller } from "./controller";
+import { view } from "./view";
+import { initialState, IState } from "./model";
 
-start();
+const controller = new Controller<IState>();
+let node: any;
+controller.addListener(state => {
+  console.log("rendering...", Date.now());
+  patch(node, (node = view(state, controller.dispatch)), document.body);
+});
 
-declare const module: any;
-declare const window: any;
-if (process.env.NODE_ENV === "development") {
-  if (module.hot) {
-    module.hot.accept("./app", () => {
-      document.body.innerHTML = "";
-      start(window["state"]);
-    });
-  }
-}
+// to get it started
+controller.dispatch(() => initialState);
