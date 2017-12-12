@@ -1,4 +1,4 @@
-import { IReducer } from "./index";
+import { IReducer } from "../controller";
 
 export const initialState = {
   path: getCurrentPath(),

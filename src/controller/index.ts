@@ -1,4 +1,4 @@
-export type IReducer<S = any> = (state: S) => null | S | Promise<IReducer<S>>;
+export type IReducer<S = any> = (state: S) => undefined | S | Promise<IReducer<S>>;
 export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
 export type IListener<S = any> = (state: S, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;

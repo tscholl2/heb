@@ -1,13 +1,14 @@
 import { h } from "picodom";
 import { IDispatch } from "../controller";
-import { IState } from "../model";
+import { initialState, IState } from "../model";
+import { actions } from "../actions";
 
-export function view(state: IState, dispatch: IDispatch<IState>) {
+export function view(state = initialState, dispatch: IDispatch<IState>) {
   return h("div", null, [
-    h("h1", null, [state.message]),
+    h("h1", null, [state.title]),
     h("input", {
-      value: state.message,
-      oninput: (e: any) => dispatch(() => ({ message: e.target.value, count: state.count })),
+      value: state.title,
+      oninput: (e: any) => dispatch(actions.update({ title: e.target.value })),
     }),
     h("h1", null, [state.count]),
     h(
@@ -18,10 +19,10 @@ export function view(state: IState, dispatch: IDispatch<IState>) {
             () =>
               new Promise(resolve => {
                 for (let i = 0; i < 100; i++) {
-                  dispatch(state => ({ message: state.message, count: state.count + 1 }));
+                  dispatch(actions.update((s: any) => ({ count: s.count + 1 })));
                 }
                 setTimeout(
-                  () => resolve(state => ({ message: state.message, count: state.count + 1 })),
+                  () => resolve(actions.update((s: any) => ({ count: s.count + 1 }))),
                   500,
                 );
               }),
@@ -32,15 +33,7 @@ export function view(state: IState, dispatch: IDispatch<IState>) {
   ]);
 }
 
-
-export function start(state = initialState) {
-  const appActions = (persist(app) as typeof app)<IState, IActions>({
-    state: state,
-    actions: {
-      router: routerActions,
-      calculator: { update: value => ({ value }) },
-      graph: { update: s => s },
-    },
+/*
     view: state => actions =>
       h(
         "div",
@@ -69,40 +62,7 @@ export function start(state = initialState) {
               ],
             }),
           ),
-          /*
-          h(
-            "main",
-            undefined,
-            Switch({
-              path: state.router.path,
-              routes: [
-                {
-                  route: "/page:id",
-                  component: ({ params }) => h("h6", undefined, `Page #${params.id}`),
-                },
-                {
-                  route: "/calculator",
-                  component: () =>
-                    Calculator({
-                      value: state.calculator.value,
-                      update: actions.calculator.update,
-                    }),
-                },
-                {
-                  route: "/graph",
-                  component: () => Graph({ ...state.graph, update: actions.graph.update }),
-                },
-                {
-                  route: "*",
-                  component: () => h("h1", undefined, "404 - page not found"),
-                },
-              ],
-            }),
-          ),
-          */
           h("footer", undefined, "Footer"),
         ],
       ),
-  });
-  newListener(appActions.router.go);
-}
+*/
