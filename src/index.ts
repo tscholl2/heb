@@ -6,7 +6,6 @@ import { initialState, IState } from "./model";
 const controller = new Controller<IState>();
 let node: any;
 controller.addListener(state => {
-  console.log("rendering...", Date.now());
   patch(node, (node = view(state, controller.dispatch)), document.body);
 });
 

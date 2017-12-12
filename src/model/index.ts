@@ -1,6 +1,7 @@
 export const initialState = {
-  message: "hello",
-  count: 0,
+  router: { path: "" },
+  graph: { f: "3*sin(x)", a: 0, b: 20, N: 100 },
+  calculator: { value: "" },
 };
 
 export type IState = typeof initialState;
