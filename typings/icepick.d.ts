@@ -119,11 +119,7 @@ declare module "icepick" {
    * }); // [ {a: 1}, {b: 4} ]
    *
    */
-  export function updateIn<C>(
-    coll: C,
-    path: string[],
-    callback: (val: any) => any,
-  ): IFrozen<C>;
+  export function updateIn<C>(coll: C, path: string[], callback: (val: any) => any): IFrozen<C>;
 
   /**
    * assign(coll1, coll2, ...)
@@ -138,7 +134,7 @@ declare module "icepick" {
    * assert(obj1 !== result); // true
    *
    */
-  export function assign(...colls: any[]): any;
+  export function assign<C>(...colls: C[]): IFrozen<C>;
   export const extend: typeof assign;
   /**
    * merge(target, source, [resolver])
@@ -275,35 +271,41 @@ declare module "icepick" {
    *   })
    *   .value(); // [0, 1, 2, 3]
    */
+  export function chain<C extends {}>(coll: C): IChainedObject<C>;
+  export function chain<C>(coll: Array<C>): IChainedArray<C>;
 
-  export interface IChainable {
-    freeze(): IChainable;
-    thaw(): IChainable;
-    assoc(key: string, val: any): IChainable;
-    dissoc(key: string): IChainable;
-    assocIn(path: string[], val: any): IChainable;
-    getIn(path: string[]): IChainable;
-    updateIn(path: string[], callback: (val: any) => any): IChainable;
-    assign(...objs: any[]): IChainable;
-    merge(source: any, resolver?: (targetVal: any, sourceVal: any, key: string) => any): IChainable;
+  export interface IChainedObject<T extends {}> {
+    freeze(): IChainedObject<IFrozen<T>>;
+    thaw(): IChainedObject<T>;
+    assoc<K extends keyof T>(key: K, val: T[K]): IChainedObject<T>;
+    dissoc<K extends keyof T>(key: K): IChainedObject<T>;
+    assocIn(path: string[], val: any): IChainedObject<T>;
+    getIn(path: string[]): IChainedObject<any>;
+    updateIn(path: string[], callback: (val: any) => any): IChainedObject<T>;
+    assign<S>(...objs: S[]): IChainedObject<T & S>;
+    merge(
+      source: any,
+      resolver?: (targetVal: any, sourceVal: any, key: string) => any,
+    ): IChainedObject<T>;
     extend(
       source: any,
       resolver?: (targetVal: any, sourceVal: any, key: string) => any,
-    ): IChainable;
-    push(...items: any[]): IChainable;
-    pop(): IChainable;
-    shift(): IChainable;
-    unshift(...items: any[]): IChainable;
-    reverse(): IChainable;
-    sort(compareFn?: (a: any, b: any) => number): IChainable;
-    splice(): IChainable;
-    slice(): IChainable;
-    map(fn: (v: any, i: number) => any): IChainable;
-    filter(): IChainable;
-    chain(): IChainable;
-    thru(callback: (val: any) => any): IChainable;
+    ): IChainedObject<T>;
+    thru<S extends {}>(callback: (val: T) => S): IChainedObject<S>;
+    thru<S>(callback: (val: T) => Array<S>): IChainedArray<S>;
     value(): any;
   }
 
-  export function chain<C>(coll: C): IChainable;
+  export interface IChainedArray<T> {
+    push(...items: T[]): IChainedArray<T>;
+    pop(): IChainedArray<T>;
+    shift(): IChainedArray<T>;
+    unshift(...items: T[]): IChainedArray<T>;
+    reverse(): IChainedArray<T>;
+    sort(compareFn?: (a: T, b: T) => number): IChainedArray<T>;
+    splice(): IChainedArray<T>;
+    slice(): IChainedArray<T>;
+    map(fn: (v: any, i: number) => any): IChainedArray<T>;
+    filter(fn: (v: T, i: number) => boolean): IChainedArray<T>;
+  }
 }
