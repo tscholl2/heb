@@ -1,4 +1,4 @@
-export type IReducer<S = any> = (state: S) => undefined | S | Promise<IReducer<S>>;
+export type IReducer<S = any> = (state: S) => S | Promise<IReducer<S>>;
 export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
 export type IListener<S = any> = (state: S, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
@@ -26,9 +26,6 @@ export class Controller<S> {
   public dispatch = (reducer: IReducer<S>) => {
     this.plugins.forEach(p => (reducer = p(reducer)));
     const result = reducer(this.state) as any;
-    if (result == null) {
-      return;
-    }
     if (typeof result.then === "function") {
       result.then(this.dispatch);
       return;

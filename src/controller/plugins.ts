@@ -1,5 +1,5 @@
 import { IReducer } from "./index";
-import * as icepick from "icepick";
+import icepick from "icepick";
 
 const preFix = (pre: (state: any) => any) => (r: IReducer): IReducer => state => r(pre(state));
 
@@ -16,8 +16,12 @@ const postFix = (post: (newState: any, oldState: any) => any) => (r: IReducer): 
   };
 };
 
+export const AllowNullReducer = postFix(
+  (newState, oldState) => (newState == null ? oldState : newState),
+);
+
 // Allows a reducer to return Partial<State>.
-export const PartialReducer = postFix((newState, oldState) => ({ ...oldState, ...newState }));
+export const PartialReducer = postFix((newState, oldState) => icepick.merge(oldState, newState));
 
 // Allows a reducer to get and return a slice of the whole state.
 export const SliceReducer = (path: string[]) => (reducer: IReducer) => {
