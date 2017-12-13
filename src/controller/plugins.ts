@@ -1,24 +1,18 @@
 import { IReducer } from "./index";
-import icepick from "icepick";
+import * as icepick from "icepick";
 
-const preFix = (pre: (state: any) => any) => (r: IReducer): IReducer => state => r(pre(state));
+const preFix = <S>(pre: (state: S) => S) => (r: IReducer<S>): IReducer<S> => state => r(pre(state));
 
-const postFix = (post: (newState: any, oldState: any) => any) => (r: IReducer): IReducer => {
-  return function apply(state) {
+const postFix = <S>(fn: (newState: S, oldState: S) => S) => {
+  const apply = (r: IReducer<S>) => (state: S) => {
     const next = r(state);
-    if (next == null) {
-      return;
+    if (next && typeof (next as any).then === "function") {
+      return (next as Promise<IReducer<S>>).then(apply);
     }
-    if (next && typeof next.then === "function") {
-      return (next as any).then(apply);
-    }
-    return post(next, state);
+    return fn(next as S, state);
   };
+  return apply;
 };
-
-export const AllowNullReducer = postFix(
-  (newState, oldState) => (newState == null ? oldState : newState),
-);
 
 // Allows a reducer to return Partial<State>.
 export const PartialReducer = postFix((newState, oldState) => icepick.merge(oldState, newState));
