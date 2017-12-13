@@ -7,28 +7,13 @@ body {
   height: 100%;
   display: grid;
   grid-gap: 0;
-  @media (max-width: 599px) {
-    grid-template-rows: 100px auto auto 100px;
-    grid-template-areas: "header" "sidebar" "content" "footer";
-  }
-  @media (min-width: 600px) {
-    grid-template-rows: 100px auto 100px;
-    grid-template-columns: 1fr 4fr;
-    grid-template-areas: "header header" "content content" "footer footer";
-  }
-}
-
-#nav-toggle:checked ~ .container {
-  @media (min-width: 600px) {
-    grid-template-areas: "header header" "sidebar content" "footer footer";
-  }
-  > nav {
-    display: flex;
-  }
+  grid-template-rows: 100px auto 100px;
+  grid-template-areas: "header" "main" "footer";
 }
 
 header {
   grid-area: header;
+  height: 100px;
   font-size: 2em;
   font-weight: 700;
   display: flex;
@@ -38,27 +23,17 @@ header {
 }
 
 main {
-  grid-area: content;
+  grid-area: main;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #457c57;
 }
 
-nav {
-  grid-area: sidebar;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #b69a6e;
-  button {
-    width: 100px;
-  }
-}
-
 footer {
   grid-area: footer;
+  height: 100px;
   text-align: center;
   font-size: 2em;
   font-weight: 700;
@@ -66,4 +41,54 @@ footer {
   justify-content: center;
   align-items: center;
   background-color: #5c596d;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #b69a6e;
+  button {
+    width: 100px;
+  }
+  position: absolute;
+  width: 400px;
+  left: 0;
+  top: 0;
+  transform: translateX(-400px);
+  transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
+}
+
+#nav-toggle {
+  display: none;
+  &:checked {
+    & ~ nav {
+      transform: translateX(0);
+      transition: transform 0.3s cubic-bezier(0, 0, 0, 1);
+      z-index: 999;
+    }
+    & ~ header > label[for="nav-toggle"] {
+      &::after {
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 998;
+        cursor: pointer;
+      }
+    }
+  }
+  & ~ header > label[for="nav-toggle"] {
+    &::after {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
+      content: "";
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
 }

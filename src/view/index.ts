@@ -22,16 +22,18 @@ export function view(dispatch: IDispatch<IState>) {
   const goToGraph = () => dispatch(actions.go("/graph"));
   const goToPg3 = () => dispatch(actions.go("/page3"));
   return (state = initialState) =>
-    h("div", undefined, [
-      h("input", { id: "nav-toggle", type: "checkbox", style: { display: "none" } }),
-      h("div", { class: "container" }, [
-        h("header", undefined, [h("label", { for: "nav-toggle" }, ["toggle nav"]), "Sample App"]),
-        h("nav", undefined, [
-          h("button", { onclick: goToCalc }, ["Calculator"]),
-          h("button", { onclick: goToGraph }, ["Graph"]),
-          h("button", { onclick: goToPg3 }, ["About"]),
-        ]),
-        h("main", undefined, [
+    h("div", { class: "container" }, [
+      h("input", { id: "nav-toggle", type: "checkbox" }),
+      h("header", undefined, [h("label", { for: "nav-toggle" }, ["toggle nav"]), "Sample App"]),
+      h("nav", undefined, [
+        h("button", { onclick: goToCalc }, ["Calculator"]),
+        h("button", { onclick: goToGraph }, ["Graph"]),
+        h("button", { onclick: goToPg3 }, ["About"]),
+      ]),
+      h(
+        "main",
+        undefined,
+        [
           h("h1", undefined, [state.title]),
           h("input", { value: state.title, oninput: onTitleInput }),
           h("h1", undefined, [state.router.path]),
@@ -46,8 +48,8 @@ export function view(dispatch: IDispatch<IState>) {
               () => h("h1", undefined, ["page not found"]),
             ],
           }),
-        ]),
-        h("footer", undefined, ["Footer"]),
-      ]),
+        ].concat(new Array(100).fill(h("h1", undefined, ["block"]))),
+      ),
+      h("footer", undefined, ["Footer"]),
     ]);
 }
