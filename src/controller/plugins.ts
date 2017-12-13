@@ -6,9 +6,12 @@ function isPromise(a: any): boolean {
 }
 
 // Allows a reducer to return Partial<State>.
-export type IPartialReducer<S = any> = (state: S) => Partial<S> | Promise<IPartialReducer<S>>;
+export type IPartialReducer<S = any> =
+  | Partial<S>
+  | ((state: S) => Partial<S> | Promise<IPartialReducer<S>>);
 export const PartialReducer = <S = any>(fn: IPartialReducer<S>): IReducer<S> => (state: S) => {
-  const next = fn(state);
+  const next = typeof fn === "function" ? fn(state) : fn;
+  state = state || (typeof next === "object" ? {} : []);
   return isPromise(next) ? (next as any).then(PartialReducer) : merge(state, next);
 };
 
@@ -21,5 +24,5 @@ export const SliceReducer = <S = any, T = S>(path: string[]) => (r: IReducer<T>)
 };
 
 // Compines Partial and Slicing.
-export const PartialSliceReducer = <S = any, T = S>(path: string[]) => (r: IReducer<T>) =>
-  PartialReducer<S>(SliceReducer<S, T>(path)(r));
+export const PartialSliceReducer = <S = any, T = S>(path: string[]) => (fn: IPartialReducer<T>) =>
+  SliceReducer<S, T>(path)(PartialReducer<T>(fn));
