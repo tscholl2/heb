@@ -1,5 +1,5 @@
 import { Component } from "picodom";
-import { routesMatcher, Params, RouteProps } from "../../utils/router";
+import { routesMatcher, RouteProps } from "../../utils/router";
 
 export interface SwitchProps {
   path: string;

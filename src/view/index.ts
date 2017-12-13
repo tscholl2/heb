@@ -1,70 +1,50 @@
 import { h } from "picodom";
 import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
-import "./style.scss"
+import { StaticSwitch } from "./components/switch";
+import "./style.scss";
 
-export function view(state = initialState, dispatch: IDispatch<IState>) {
-  return h("div", undefined, [
-    h("h1", undefined, [state.title]),
-    h("input", {
-      value: state.title,
-      oninput: (e: any) => dispatch(actions.update(_ => ({ title: e.target.value }))),
-    }),
-    h("h1", undefined, [state.router.path]),
-    h("button", { onclick: () => dispatch(actions.go("/foo")) }, ["→"]),
-    h("h1", undefined, [state.count]),
-    h(
-      "button",
-      {
-        onclick: () =>
-          dispatch(
-            () =>
-              new Promise(resolve => {
-                for (let i = 0; i < 100; i++) {
-                  dispatch(actions.update((s: any) => ({ count: s.count + 1 })));
-                }
-                setTimeout(
-                  () => resolve(actions.update((s: any) => ({ count: s.count + 1 }))),
-                  500,
-                );
-              }),
-          ),
-      },
-      ["↑"],
-    ),
-  ]);
+const Switch = StaticSwitch(["/page:id", "*"]);
+
+export function view(dispatch: IDispatch<IState>) {
+  // bind actions
+  const onTitleInput = (e: any) => dispatch(actions.update(_ => ({ title: e.target.value })));
+  const goToFoo = () => dispatch(actions.go("/foo"));
+  const addOneToCount = () => dispatch(actions.update((s: any) => ({ count: s.count + 1 })));
+  const addOneToCountLater = () =>
+    dispatch(
+      () =>
+        new Promise(resolve =>
+          setTimeout(() => resolve(actions.update((s: any) => ({ count: s.count + 1 }))), 1000),
+        ),
+    );
+  const goToCalc = () => dispatch(actions.go("/calculator"));
+  const goToGraph = () => dispatch(actions.go("/graph"));
+  const goToPg3 = () => dispatch(actions.go("/page3"));
+  return (state = initialState) =>
+    h("div", { class: "container" }, [
+      h("header", undefined, ["Sample App"]),
+      h("aside", undefined, [
+        h("button", { onclick: goToCalc }, ["Calculator"]),
+        h("button", { onclick: goToGraph }, ["Graph"]),
+        h("button", { onclick: goToPg3 }, ["About"]),
+      ]),
+      h("main", undefined, [
+        h("h1", undefined, [state.title]),
+        h("input", { value: state.title, oninput: onTitleInput }),
+        h("h1", undefined, [state.router.path]),
+        h("button", { onclick: goToFoo }, ["→"]),
+        h("h1", undefined, [state.count]),
+        h("button", { onclick: addOneToCount }, ["↑ now"]),
+        h("button", { onclick: addOneToCountLater }, ["↑ late"]),
+        Switch({
+          path: state.router.path,
+          components: [
+            ({ params }) => h("h6", undefined, [`Page #${params.id}`]),
+            () => h("h1", undefined, ["page not found"]),
+          ],
+        }),
+      ]),
+      h("footer", undefined, ["Footer"]),
+    ]);
 }
-
-/*
-    view: state => actions =>
-      h(
-        "div",
-        { class: "container" },
-        [
-          h("header", undefined, "Sample App"),
-          h("aside", undefined, [
-            h("button", { onclick: () => actions.router.go("/calculator") }, "Calculator"),
-            h("button", { onclick: () => actions.router.go("/graph") }, "Graph"),
-            h("button", { onclick: () => actions.router.go("/page3") }, "About"),
-          ]),
-          h(
-            "main",
-            undefined,
-            Switch2({
-              path: state.router.path,
-              components: [
-                ({ params }) => h("h6", undefined, `Page #${params.id}`),
-                () =>
-                  Calculator({
-                    value: state.calculator.value,
-                    update: actions.calculator.update,
-                  }),
-                () => Graph({ ...state.graph, update: actions.graph.update }),
-                () => h("h1", undefined, "404 - page not found"),
-              ],
-            }),
-          ),
-          h("footer", undefined, "Footer"),
-        ],
-      ),
-*/
