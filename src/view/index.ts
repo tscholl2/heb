@@ -1,6 +1,7 @@
 import { h } from "picodom";
 import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
+import "./style.scss"
 
 export function view(state = initialState, dispatch: IDispatch<IState>) {
   return h("div", undefined, [
