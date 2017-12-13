@@ -25,7 +25,7 @@ export class Controller<S> {
 
   public dispatch = (reducer: IReducer<S>) => {
     this.plugins.forEach(p => (reducer = p(reducer)));
-    const result = reducer(this.state) as any;
+    const result: any = reducer(this.state);
     if (typeof result.then === "function") {
       result.then(this.dispatch);
       return;
