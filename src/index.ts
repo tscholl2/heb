@@ -1,9 +1,8 @@
 import { patch } from "picodom";
-import { Controller } from "./controller";
+import { Controller, actions } from "./controller";
 import { view } from "./view";
 import { initialState, IState } from "./model";
 import { addListener } from "./addons/router";
-import { actions } from "./actions";
 
 const controller = new Controller<IState>();
 let node: any;

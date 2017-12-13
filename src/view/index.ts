@@ -1,16 +1,17 @@
 import { h } from "picodom";
-import { IDispatch } from "../controller";
+import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
-import { actions } from "../actions";
 
 export function view(state = initialState, dispatch: IDispatch<IState>) {
-  return h("div", null, [
-    h("h1", null, [state.title]),
+  return h("div", undefined, [
+    h("h1", undefined, [state.title]),
     h("input", {
       value: state.title,
-      oninput: (e: any) => dispatch(actions.update({ title: e.target.value })),
+      oninput: (e: any) => dispatch(actions.update(_ => ({ title: e.target.value }))),
     }),
-    h("h1", null, [state.count]),
+    h("h1", undefined, [state.router.path]),
+    h("button", { onclick: () => dispatch(actions.go("/foo")) }, ["→"]),
+    h("h1", undefined, [state.count]),
     h(
       "button",
       {

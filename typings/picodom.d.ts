@@ -1,5 +1,5 @@
 declare module "picodom" {
-  export interface VNode<Props={}> {
+  export interface VNode<Props = {}> {
     type: string;
     props?: Props;
     children: Array<VNode<{}> | string>;
@@ -12,17 +12,17 @@ declare module "picodom" {
   export function h<Props extends {}>(
     tag: Component<Props> | string,
     props: Props,
-    children?: Array<VNode | string | number | null>,
+    children?: Array<VNode | string | number | null | undefined>,
   ): VNode<Props>;
 
   export function h<Props>(
     tag: Component<Props> | string,
-    props: null,
-    children?: Array<VNode | string | number | null>,
+    props: null | undefined,
+    children?: Array<VNode | string | number | null | undefined>,
   ): VNode;
 
   export function patch(
-    oldNode: VNode | null,
+    oldNode: VNode | null | undefined,
     newNode: VNode,
     container?: HTMLElement,
   ): Element;

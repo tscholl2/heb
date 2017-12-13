@@ -10,10 +10,7 @@ export const go = (path: string): IReducer<IState> => state => {
   if (path !== getCurrentPath()) {
     history.pushState({}, "", path);
   }
-  if (path !== state.path) {
-    return { path };
-  }
-  return null;
+  return path !== state.path ? { path } : state;
 };
 
 /**
@@ -33,8 +30,6 @@ export function addListener(listener: (path: string) => void) {
 
 /**
  * Returns the url the browser is currently at.
- *
- * @returns {string} path
  */
 function getCurrentPath() {
   return `${window.location.pathname}${window.location.search}${window.location.hash}`;
