@@ -14,7 +14,16 @@ body {
   @media (min-width: 600px) {
     grid-template-rows: 100px auto 100px;
     grid-template-columns: 1fr 4fr;
+    grid-template-areas: "header header" "content content" "footer footer";
+  }
+}
+
+#nav-toggle:checked ~ .container {
+  @media (min-width: 600px) {
     grid-template-areas: "header header" "sidebar content" "footer footer";
+  }
+  > nav {
+    display: flex;
   }
 }
 
@@ -36,9 +45,9 @@ main {
   background-color: #457c57;
 }
 
-aside {
+nav {
   grid-area: sidebar;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;

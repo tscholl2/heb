@@ -22,29 +22,32 @@ export function view(dispatch: IDispatch<IState>) {
   const goToGraph = () => dispatch(actions.go("/graph"));
   const goToPg3 = () => dispatch(actions.go("/page3"));
   return (state = initialState) =>
-    h("div", { class: "container" }, [
-      h("header", undefined, ["Sample App"]),
-      h("aside", undefined, [
-        h("button", { onclick: goToCalc }, ["Calculator"]),
-        h("button", { onclick: goToGraph }, ["Graph"]),
-        h("button", { onclick: goToPg3 }, ["About"]),
+    h("div", undefined, [
+      h("input", { id: "nav-toggle", type: "checkbox", style: { display: "none" } }),
+      h("div", { class: "container" }, [
+        h("header", undefined, [h("label", { for: "nav-toggle" }, ["toggle nav"]), "Sample App"]),
+        h("nav", undefined, [
+          h("button", { onclick: goToCalc }, ["Calculator"]),
+          h("button", { onclick: goToGraph }, ["Graph"]),
+          h("button", { onclick: goToPg3 }, ["About"]),
+        ]),
+        h("main", undefined, [
+          h("h1", undefined, [state.title]),
+          h("input", { value: state.title, oninput: onTitleInput }),
+          h("h1", undefined, [state.router.path]),
+          h("button", { onclick: goToFoo }, ["→"]),
+          h("h1", undefined, [state.count]),
+          h("button", { onclick: addOneToCount }, ["↑ now"]),
+          h("button", { onclick: addOneToCountLater }, ["↑ late"]),
+          Switch({
+            path: state.router.path,
+            components: [
+              ({ params }) => h("h6", undefined, [`Page #${params.id}`]),
+              () => h("h1", undefined, ["page not found"]),
+            ],
+          }),
+        ]),
+        h("footer", undefined, ["Footer"]),
       ]),
-      h("main", undefined, [
-        h("h1", undefined, [state.title]),
-        h("input", { value: state.title, oninput: onTitleInput }),
-        h("h1", undefined, [state.router.path]),
-        h("button", { onclick: goToFoo }, ["→"]),
-        h("h1", undefined, [state.count]),
-        h("button", { onclick: addOneToCount }, ["↑ now"]),
-        h("button", { onclick: addOneToCountLater }, ["↑ late"]),
-        Switch({
-          path: state.router.path,
-          components: [
-            ({ params }) => h("h6", undefined, [`Page #${params.id}`]),
-            () => h("h1", undefined, ["page not found"]),
-          ],
-        }),
-      ]),
-      h("footer", undefined, ["Footer"]),
     ]);
 }
