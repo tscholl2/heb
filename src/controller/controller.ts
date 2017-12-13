@@ -1,6 +1,6 @@
-export type IReducer<S = any> = (state: S) => S | Promise<IReducer<S>>;
+export type IReducer<S = any> = (state: Readonly<S>) => S | Promise<IReducer<S>>;
 export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
-export type IListener<S = any> = (state: S, dispatch: IDispatch<S>) => void;
+export type IListener<S = any> = (state: Readonly<S>, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
 
 export class Controller<S> {
