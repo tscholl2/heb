@@ -1,4 +1,6 @@
-export type IReducer<S = any> = (state: Readonly<S>) => S | Promise<IReducer<S>>;
+export type ISyncReducer<S = any> = (state: Readonly<S>) => S;
+export type IAsyncReducer<S = any> = (state: Readonly<S>) => Promise<S>;
+export type IReducer<S = any> = ISyncReducer<S> | IAsyncReducer<S>;
 export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
 export type IListener<S = any> = (state: Readonly<S>, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
@@ -23,13 +25,9 @@ export class Controller<S> {
     this.listeners = this.listeners.filter(l => l !== listener);
   };
 
-  public dispatch = (reducer: IReducer<S>) => {
+  public dispatch = async (reducer: IReducer<S>) => {
     this.plugins.forEach(p => (reducer = p(reducer)));
-    const result: any = reducer(this.state);
-    if (typeof result.then === "function") {
-      result.then(this.dispatch);
-      return;
-    }
+    const result = await reducer(this.state);
     // important: state should be immutable
     if (this.state !== result) {
       this.state = result;
