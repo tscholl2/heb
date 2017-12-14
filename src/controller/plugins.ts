@@ -6,7 +6,10 @@ export type IPartialReducer<S = any> =
   | Partial<S>
   | ((state: S) => Partial<S> | Promise<Partial<S>>);
 export function PartialReducer<S = any>(fn: IPartialReducer<S>): IReducer<S> {
-  return async state => merge(state, typeof fn === "object" ? fn : await fn(state));
+  return async state => {
+    const next = typeof fn === "object" ? fn : await fn(state);
+    return state == null ? next : merge(state, next);
+  };
 }
 
 // Given a reducer for a substate T of S, returns a reducer for S by wrapping

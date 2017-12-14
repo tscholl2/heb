@@ -1,6 +1,4 @@
-export type ISyncReducer<S = any> = (state: Readonly<S>) => S;
-export type IAsyncReducer<S = any> = (state: Readonly<S>) => Promise<S>;
-export type IReducer<S = any> = ISyncReducer<S> | IAsyncReducer<S>;
+export type IReducer<S = any> = (state: Readonly<S>) => S | Promise<S>;
 export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
 export type IListener<S = any> = (state: Readonly<S>, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
