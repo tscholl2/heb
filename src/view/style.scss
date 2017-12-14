@@ -20,6 +20,17 @@ header {
   justify-content: center;
   align-items: center;
   background-color: #445a2f;
+  > * {
+    flex: 1;
+  }
+  > label > svg {
+    margin-left: 30px;
+    width: 80px;
+    height: 80px;
+  }
+  > h1 {
+    text-align: center;
+  }
 }
 
 main {
@@ -52,10 +63,9 @@ nav {
   button {
     width: 100px;
   }
-  position: absolute;
+  position: fixed;
   width: 400px;
-  left: 0;
-  top: 0;
+  height: 100vh;
   transform: translateX(-400px);
   transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
 }

@@ -2,6 +2,7 @@ import { h } from "picodom";
 import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
 import { StaticSwitch } from "./components/switch";
+import { MenuIcon } from "./components/menu-icon";
 import "./style.scss";
 
 const Switch = StaticSwitch(["/page:id", "*"]);
@@ -24,7 +25,11 @@ export function view(dispatch: IDispatch<IState>) {
   return (state = initialState) =>
     h("div", { class: "container" }, [
       h("input", { id: "nav-toggle", type: "checkbox" }),
-      h("header", undefined, [h("label", { for: "nav-toggle" }, ["toggle nav"]), "Sample App"]),
+      h("header", undefined, [
+        h("label", { for: "nav-toggle" }, [MenuIcon()]),
+        h("h1", undefined, ["Sample App"]),
+        h("span"),
+      ]),
       h("nav", undefined, [
         h("button", { onclick: goToCalc }, ["Calculator"]),
         h("button", { onclick: goToGraph }, ["Graph"]),
