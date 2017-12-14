@@ -2,37 +2,37 @@ import { test } from "tape";
 import { PartialReducer, PartialSliceReducer, SliceReducer } from "./plugins";
 import * as icepick from "icepick";
 
-test("return partial state", async t => {
+test("return partial state", t => {
   // only updates .b
   let r = PartialReducer(s => ({ b: s.b + 1 }));
-  t.deepEqual(await r({ a: "a", b: 0 }), { a: "a", b: 1 });
+  t.deepEqual(r({ a: "a", b: 0 }), { a: "a", b: 1 });
   // non-function
   r = PartialReducer<any>({ b: { c: 7 } });
-  t.deepEqual(await r({ b: { c: 3, d: 4 } }), { b: { c: 7, d: 4 } });
+  t.deepEqual(r({ b: { c: 3, d: 4 } }), { b: { c: 7, d: 4 } });
   // creates nested objects if necessary
   r = PartialReducer<any>(() => ({ a: { b: { c: 7 } } }));
-  t.deepEqual(await r({ y: 7 }), { a: { b: { c: 7 } }, y: 7 });
+  t.deepEqual(r({ y: 7 }), { a: { b: { c: 7 } }, y: 7 });
   t.end();
 });
 
-test("return slice state", async t => {
-  const r = SliceReducer(["c", "b"])(s => ({ a: s.a + 1 }));
+test("return slice state", t => {
+  const r = SliceReducer(["c", "b"])((s: any) => ({ a: s.a + 1 }));
   // updates slice at .c.b even though reducer only see's about .a
-  t.deepEqual(await r({ c: { b: { a: 3 } } }), { c: { b: { a: 4 } } });
+  t.deepEqual(r({ c: { b: { a: 3 } } }), { c: { b: { a: 4 } } });
   // does not merge
-  t.deepEqual(await r({ c: { b: { a: 3, x: 7 } } }), { c: { b: { a: 4 } } });
+  t.deepEqual(r({ c: { b: { a: 3, x: 7 } } }), { c: { b: { a: 4 } } });
   t.end();
 });
 
-test("return partial slice state", async t => {
+test("return partial slice state", t => {
   let r = PartialSliceReducer(["a", "b"])({ z: 3 });
-  t.deepEqual(await r({ a: { b: { x: 3 } } }), { a: { b: { x: 3, z: 3 } } });
+  t.deepEqual(r({ a: { b: { x: 3 } } }), { a: { b: { x: 3, z: 3 } } });
   r = PartialSliceReducer(["a", "b"])(() => ({ z: 3 }));
-  t.deepEqual(await r({ a: { b: { x: 3 } } }), { a: { b: { x: 3, z: 3 } } });
-  t.deepEqual(await r({ a: {} }), { a: { b: { z: 3 } } });
+  t.deepEqual(r({ a: { b: { x: 3 } } }), { a: { b: { x: 3, z: 3 } } });
+  t.deepEqual(r({ a: {} }), { a: { b: { z: 3 } } });
   r = PartialSliceReducer(["a", "b"])(() => [1, 3]);
-  t.deepEqual(await r({}), { a: { b: [1, 3] } });
-  t.deepEqual(await r({ a: { b: [3, 4, 5] }, c: 8 }), { a: { b: [1, 3, 5] }, c: 8 });
+  t.deepEqual(r({}), { a: { b: [1, 3] } });
+  t.deepEqual(r({ a: { b: [3, 4, 5] }, c: 8 }), { a: { b: [1, 3, 5] }, c: 8 });
   t.end();
 });
 

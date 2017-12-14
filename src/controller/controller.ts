@@ -1,10 +1,10 @@
-export type IReducer<S = any> = (state: Readonly<S>) => S | Promise<S>;
+export type IReducer<S = any> = (state: Readonly<S>) => S;
 export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
-export type IListener<S = any> = (state: Readonly<S>, dispatch: IDispatch<S>) => void;
+export type IListener<S = any> = (state: S, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
 
 export class Controller<S> {
-  private state: Readonly<S>;
+  private state: S;
   private isUpdating: boolean;
   private shouldUpdate: boolean;
   private plugins: IPlugin<S>[];
@@ -23,9 +23,9 @@ export class Controller<S> {
     this.listeners = this.listeners.filter(l => l !== listener);
   };
 
-  public dispatch = async (reducer: IReducer<S>) => {
+  public dispatch = (reducer: IReducer<S>) => {
     this.plugins.forEach(p => (reducer = p(reducer)));
-    const result = await reducer(this.state);
+    const result = reducer(this.state);
     // important: state should be immutable
     if (this.state !== result) {
       this.state = result;
