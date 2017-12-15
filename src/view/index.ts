@@ -4,6 +4,7 @@ import { initialState, IState } from "../model";
 import { StaticSwitch } from "./components/switch";
 import { MenuIcon } from "./components/menu-icon";
 import { Calculator } from "./components/calculator";
+import cc from "classcat";
 import "./style.scss";
 
 const Switch = StaticSwitch(["/page:id", "/calculator", "*"]);
@@ -18,15 +19,24 @@ export function view(dispatch: IDispatch<IState>) {
   const goToGraph = () => dispatch(actions.go("/graph"));
   const goToPg3 = () => dispatch(actions.go("/page3"));
   const updateCalc = (value: string) => dispatch(actions.updateIn(["calculator"])({ value }));
+  const closeObf = () =>
+    dispatch(
+      actions.update<IState>(state => {
+        if (state.ui.navigationOpen) {
+          return { ui: { obfuscateOn: false, navigationOpen: false } };
+        }
+      }),
+    );
+  const openNav = () =>
+    dispatch(actions.updateIn(["ui"])({ navigationOpen: true, obfuscateOn: true }));
   return (state = initialState) =>
     h("div", { class: "container" }, [
-      h("input", { id: "nav-toggle", type: "checkbox" }),
       h("header", undefined, [
-        h("label", { for: "nav-toggle" }, [MenuIcon()]),
+        h("button", { onclick: openNav }, [MenuIcon()]),
         h("h1", undefined, ["Sample App"]),
         h("span"),
       ]),
-      h("nav", undefined, [
+      h("nav", { class: cc([{ ["nav-open"]: state.ui.navigationOpen }]) }, [
         h("button", { onclick: goToCalc }, ["Calculator"]),
         h("button", { onclick: goToGraph }, ["Graph"]),
         h("button", { onclick: goToPg3 }, ["About"]),
@@ -53,5 +63,11 @@ export function view(dispatch: IDispatch<IState>) {
         ].concat(new Array(100).fill(h("h1", undefined, ["block"]))),
       ),
       h("footer", undefined, ["Footer"]),
+      // portals
+      h("div", {
+        class: cc(["obfuscatsion", { ["obfuscatsion-on"]: state.ui.obfuscateOn }]),
+        onclick: closeObf,
+      }),
+      // h("div", { class: cc(["modal", { "modal-on": false }]) }),
     ]);
 }

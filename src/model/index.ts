@@ -6,6 +6,10 @@ export const initialState = {
   count: 0,
   graph: { f: "3*sin(x)", a: 0, b: 20, N: 100 },
   calculator: { value: "" },
+  ui: {
+    obfuscateOn: false,
+    navigationOpen: false,
+  },
 };
 
 export type IState = typeof initialState;
