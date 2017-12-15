@@ -3,9 +3,10 @@ import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
 import { StaticSwitch } from "./components/switch";
 import { MenuIcon } from "./components/menu-icon";
+import { Calculator } from "./components/calculator";
 import "./style.scss";
 
-const Switch = StaticSwitch(["/page:id", "*"]);
+const Switch = StaticSwitch(["/page:id", "/calculator", "*"]);
 
 export function view(dispatch: IDispatch<IState>) {
   // bind actions
@@ -16,6 +17,7 @@ export function view(dispatch: IDispatch<IState>) {
   const goToCalc = () => dispatch(actions.go("/calculator"));
   const goToGraph = () => dispatch(actions.go("/graph"));
   const goToPg3 = () => dispatch(actions.go("/page3"));
+  const updateCalc = (value: string) => dispatch(actions.updateIn(["calculator"])({ value }));
   return (state = initialState) =>
     h("div", { class: "container" }, [
       h("input", { id: "nav-toggle", type: "checkbox" }),
@@ -44,6 +46,7 @@ export function view(dispatch: IDispatch<IState>) {
             path: state.router.path,
             components: [
               ({ params }) => h("h6", undefined, [`Page #${params.id}`]),
+              () => Calculator({ value: state.calculator.value, onupdate: updateCalc }),
               () => h("h1", undefined, ["page not found"]),
             ],
           }),
