@@ -25,6 +25,7 @@ export function view(dispatch: IDispatch<IState>) {
         if (state.ui.navigationOpen) {
           return { ui: { obfuscateOn: false, navigationOpen: false } };
         }
+        return;
       }),
     );
   const openNav = () =>
