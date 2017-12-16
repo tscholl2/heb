@@ -68,6 +68,10 @@ export function view(dispatch: IDispatch<IState>) {
         class: cc(["obfuscatsion", { ["obfuscatsion-on"]: state.ui.obfuscateOn }]),
         onclick: closeObf,
       }),
-      // h("div", { class: cc(["modal", { "modal-on": false }]) }),
+      h("div", { class: cc(["modal", { "modal-on": true }]) }, [
+        h("div", { style: { backgroundColor: "white", width: "800px", height: "400px" } }, [
+          "this is a test",
+        ]),
+      ]),
     ]);
 }
