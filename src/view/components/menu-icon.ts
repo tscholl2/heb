@@ -5,7 +5,7 @@ export const MenuIcon = () =>
     "svg",
     {
       viewBox: "0 0 32 32",
-      width: "32px",
+      width: "75px",
       style: { cursor: "pointer" },
       xmlns: "http://www.w3.org/2000/svg",
     },

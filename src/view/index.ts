@@ -3,6 +3,7 @@ import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
 import { StaticSwitch } from "./components/switch";
 import { MenuIcon } from "./components/menu-icon";
+import { AccountIcon } from "./components/account-icon";
 import { Calculator } from "./components/calculator";
 import cc from "classcat";
 import "./style.scss";
@@ -33,9 +34,9 @@ export function view(dispatch: IDispatch<IState>) {
   return (state = initialState) =>
     h("div", { class: "container" }, [
       h("header", undefined, [
-        h("button", { onclick: openNav }, [MenuIcon()]),
+        h("span", undefined, [h("button", { onclick: openNav }, [MenuIcon()])]),
         h("h1", undefined, ["Sample App"]),
-        h("span"),
+        h("span", undefined, [h("button", { onclick: openNav }, [AccountIcon()])]),
       ]),
       h("nav", { class: cc([{ ["nav-open"]: state.ui.navigationOpen }]) }, [
         h("button", { onclick: goToCalc }, ["Calculator"]),
@@ -69,7 +70,7 @@ export function view(dispatch: IDispatch<IState>) {
         class: cc(["obfuscatsion", { ["obfuscatsion-on"]: state.ui.obfuscateOn }]),
         onclick: closeObf,
       }),
-      h("div", { class: cc(["modal", { "modal-on": true }]) }, [
+      h("div", { class: cc(["modal", { "modal-on": false }]) }, [
         h("div", { style: { backgroundColor: "white", width: "800px", height: "400px" } }, [
           "this is a test",
         ]),

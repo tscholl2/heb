@@ -11,7 +11,7 @@
     "parcel-bundler": "^1.1.0",
     "tap-summary": "^4.0.0",
     "tape": "^4.8.0",
-    "ts-node": "4.0.1",
+    "ts-node": "^4.0.2",
     "typescript": "^2.6.2"
   },
   "dependencies": {
