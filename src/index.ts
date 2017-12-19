@@ -6,9 +6,9 @@ import { addListener } from "./addons/router";
 declare const module: any;
 declare const window: any;
 
-function run() {
+function start(state = initialState) {
   const controller = new Controller<IState>();
-  let node: any;
+  let node: any = undefined;
   const v = view(controller.dispatch);
   controller.addListener(state => {
     console.log("updating state");
@@ -17,17 +17,24 @@ function run() {
   });
   // listen for url changes
   addListener(path => controller.dispatch(actions.go(path)));
-  // to get it started
-  controller.dispatch(() => window["state"] || initialState);
-
-  // TODO check if production?
+  // get the ball rolling
+  controller.dispatch(() => state);
+  // attach redux devtools
+  // TODO also check if production
   if (window["__REDUX_DEVTOOLS_EXTENSION__"]) {
-    // TODO: dont re-create devtools cause history is deleted on hot-reload
-    const devtools = window["__REDUX_DEVTOOLS_EXTENSION__"].connect();
-    devtools.send({ type: "APP_LOADED" }, controller.getState());
+    let devtools: any;
+    if (window["devtools"] === undefined) {
+      devtools = window["__REDUX_DEVTOOLS_EXTENSION__"].connect();
+      window["devtools"] = devtools;
+      devtools.send({ type: "APP_START" }, controller.getState());
+    } else {
+      devtools = window["devtools"];
+      devtools.send({ type: "APP_RELOADED" }, controller.getState());
+    }
     controller.addPlugin(r => state => {
       const next = r(state);
       if (!(r as any)["__REDUX_DEVTOOLS__"]) {
+        // TODO wrap reducers with some extra debugging info
         devtools.send({ type: "TODO" }, next);
       }
       return next;
@@ -42,11 +49,21 @@ function run() {
   }
 }
 
+// TODO also check if production
 if (module.hot) {
   module.hot.accept(() => {
-    document.body.innerHTML = "";
-    run();
+    console.log("ADDING A NEW THING");
+    start(window["state"]);
   });
+  module.hot.dispose(() => {
+    document.body.innerHTML = "";
+  });
+  // this is run only 1x when the app first starts
+  if (!window["__already_loaded__"]) {
+    window["__already_loaded__"] = true;
+    start();
+  }
+} else {
+  // this is in production
+  start();
 }
-
-run();
