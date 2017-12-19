@@ -7,21 +7,26 @@ export class Controller<S> {
   private state: S;
   private isUpdating: boolean;
   private shouldUpdate: boolean;
-  private plugins: IPlugin<S>[];
+  private plugins: IPlugin<S>[] = [];
   private listeners: IListener<S>[] = [];
-  constructor(plugins: IPlugin<S>[] = []) {
-    this.plugins = plugins;
-  }
 
   public getState = () => this.state;
 
-  public addListener = (listener: IListener<S>) => {
-    this.listeners.push(listener);
-  };
+  public addPlugin(plugin: IPlugin<S>) {
+    this.plugins.push(plugin);
+  }
 
-  public removeListener = (listener: IListener<S>) => {
+  public removePlugin(plugin: IPlugin<S>) {
+    this.plugins = this.plugins.filter(p => p !== plugin);
+  }
+
+  public addListener(listener: IListener<S>) {
+    this.listeners.push(listener);
+  }
+
+  public removeListener(listener: IListener<S>) {
     this.listeners = this.listeners.filter(l => l !== listener);
-  };
+  }
 
   public dispatch = (reducer: IReducer<S>) => {
     this.plugins.forEach(p => (reducer = p(reducer)));

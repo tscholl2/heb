@@ -19,6 +19,27 @@ function run() {
   addListener(path => controller.dispatch(actions.go(path)));
   // to get it started
   controller.dispatch(() => window["state"] || initialState);
+
+  // TODO check if production?
+  if (window["__REDUX_DEVTOOLS_EXTENSION__"]) {
+    // TODO: dont re-create devtools cause history is deleted on hot-reload
+    const devtools = window["__REDUX_DEVTOOLS_EXTENSION__"].connect();
+    devtools.send({ type: "APP_LOADED" }, controller.getState());
+    controller.addPlugin(r => state => {
+      const next = r(state);
+      if (!(r as any)["__REDUX_DEVTOOLS__"]) {
+        devtools.send({ type: "TODO" }, next);
+      }
+      return next;
+    });
+    devtools.subscribe((message: any) => {
+      if (message.type === "DISPATCH" && message.state) {
+        controller.dispatch(
+          Object.assign(() => JSON.parse(message.state), { __REDUX_DEVTOOLS__: true }),
+        );
+      }
+    });
+  }
 }
 
 if (module.hot) {
