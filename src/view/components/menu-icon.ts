@@ -1,17 +1,17 @@
 import { h } from "picodom";
+import { h } from "picodom";
 
-export const MenuIcon = () =>
-  h(
-    "svg",
-    {
-      viewBox: "0 0 32 32",
-      style: { cursor: "pointer" },
-      xmlns: "http://www.w3.org/2000/svg",
-    },
-    [
-      h("path", {
-        d:
-          "M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2 s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2 S29.104,22,28,22z",
-      }),
-    ],
-  );
+// import url from "./menu-icon.svg":
+const url = require("./menu-icon.svg");
+
+export const MenuIcon = () => h("img", { src: "dist/" + url });
+
+/*
+const fs = require("fs");
+// Read contents as a string
+declare const __dirname: string;
+const svg = fs.readFileSync(__dirname + "/menu-icon.svg", "utf8");
+
+export const MenuIcon = () => h("img", { src: `data:image/svg+xml;base64,${btoa(svg)}` });
+
+*/
