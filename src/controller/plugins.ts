@@ -5,7 +5,10 @@ import { merge, setIn, getIn } from "icepick";
 export type IPartialReducer<S = any> = Partial<S> | ((state: S) => undefined | Partial<S>);
 export function PartialReducer<S = any>(fn: IPartialReducer<S>): IReducer<S> {
   return state => {
-    const next = typeof fn === "object" ? fn : fn(state);
+    const next = typeof fn === "function" ? fn(state) : fn;
+    if (state === undefined) {
+      return next as any;
+    }
     return next == null ? state : merge(state, next);
   };
 }
