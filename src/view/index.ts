@@ -37,23 +37,19 @@ export function view(dispatch: IDispatch<IState>) {
       h("header", undefined, [
         h("span", undefined, [h("button", { onclick: openSideNav }, [MenuIcon()])]),
         h("h1", undefined, ["Sample App"]),
-        h("span", undefined, [
-          h("button", { onclick: openTopNav }, [
-            AccountIcon(),
-            h("nav", { class: cc(["top-nav", { ["nav-open"]: state.ui.topNavigationOpen }]) }, [
-              h("ul", undefined, [
-                h("li", undefined, ["item1"]),
-                h("li", undefined, ["item2"]),
-                h("li", undefined, ["item3"]),
-              ]),
-            ]),
-          ]),
-        ]),
+        h("span", undefined, [h("button", { onclick: openTopNav }, [AccountIcon()])]),
       ]),
       h("nav", { class: cc(["side-nav", { ["nav-open"]: state.ui.sideNavigationOpen }]) }, [
         h("button", { onclick: goToCalc }, ["Calculator"]),
         h("button", { onclick: goToGraph }, ["Graph"]),
         h("button", { onclick: goToPg3 }, ["About"]),
+      ]),
+      h("nav", { class: cc(["top-nav", { ["nav-open"]: state.ui.topNavigationOpen }]) }, [
+        h("ul", undefined, [
+          h("li", undefined, ["item1"]),
+          h("li", undefined, ["item2"]),
+          h("li", undefined, ["item3"]),
+        ]),
       ]),
       h(
         "main",

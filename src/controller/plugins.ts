@@ -1,17 +1,12 @@
 import { IReducer } from "./index";
 import { merge, setIn, getIn } from "icepick";
 
-type IDeepPartial<S> = Partial<{ [key in keyof S]: IDeepPartial<S[key]> }>;
-
 // Allows a reducer to return Partial<State>.
-export type IPartialReducer<S = any> = Partial<S> | ((state: S) => undefined | IDeepPartial<S>);
+export type IPartialReducer<S = any> = Partial<S> | ((state: S) => undefined | Partial<S>);
 export function PartialReducer<S = any>(fn: IPartialReducer<S>): IReducer<S> {
   return state => {
     const next = typeof fn === "object" ? fn : fn(state);
-    if (next === undefined) {
-      return state;
-    }
-    return state == null ? next : merge(state, next);
+    return next == null ? state : merge(state, next);
   };
 }
 

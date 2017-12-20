@@ -51,7 +51,7 @@ declare module "icepick" {
    * var newArr = icepick.assoc(arr, 2, "d"); // ["a", "b", "d"]
    *
    */
-  export function assoc<C>(coll: C, key: string, val: any): IFrozen<C>;
+  export function assoc<C, K extends keyof C>(coll: C, key: K, val: C[K]): IFrozen<C>;
   export const set: typeof assoc;
   /**
    * dissoc(collection, key)
@@ -66,7 +66,7 @@ declare module "icepick" {
    * var newArr = icepick.dissoc(arr, 2); // ["a", , "c"]
    *
    */
-  export function dissoc<C>(coll: C, key: string): IFrozen<C>;
+  export function dissoc<C, K extends keyof C>(coll: C, key: K): IFrozen<C>;
   export const unset: typeof dissoc;
   /**
    * assocIn(collection, path, value)
@@ -134,7 +134,14 @@ declare module "icepick" {
    * assert(obj1 !== result); // true
    *
    */
-  export function assign<C>(...colls: C[]): IFrozen<C>;
+  export function assign<C1, C2>(coll1: C1, coll2: C2): IFrozen<C1 & C2>;
+  export function assign<C1, C2, C3>(coll1: C1, coll2: C2, coll3: C3): IFrozen<C1 & C2 & C3>;
+  export function assign<C1, C2, C3, C4>(
+    coll1: C1,
+    coll2: C2,
+    coll3: C3,
+    coll4: C4,
+  ): IFrozen<C1 & C2 & C3 & C4>;
   export const extend: typeof assign;
   /**
    * merge(target, source, [resolver])
@@ -165,11 +172,11 @@ declare module "icepick" {
    * The resolver function receives three arguments: the value from the target object, the value from the source object, and the key of the value being merged.
    *
    */
-  export function merge(
-    target: any,
-    source: any,
+  export function merge<T, S>(
+    target: T,
+    source: S,
     resolver?: (targetVal: any, sourceVal: any, key: string) => any,
-  ): any;
+  ): T & S;
 
   // Array.prototype methods
   //  var a = [1];
@@ -293,7 +300,7 @@ declare module "icepick" {
     ): IChainedObject<T>;
     thru<S extends {}>(callback: (val: T) => S): IChainedObject<S>;
     thru<S>(callback: (val: T) => Array<S>): IChainedArray<S>;
-    value(): any;
+    value(): IFrozen<T>;
   }
 
   export interface IChainedArray<T> {
@@ -307,5 +314,8 @@ declare module "icepick" {
     slice(): IChainedArray<T>;
     map(fn: (v: any, i: number) => any): IChainedArray<T>;
     filter(fn: (v: T, i: number) => boolean): IChainedArray<T>;
+    thru<S>(callback: (val: IFrozen<Array<T>>) => Array<S>): IChainedArray<S>;
+    thru<S extends {}>(callback: (val: T) => S): IChainedObject<S>;
+    value(): IFrozen<Array<T>>;
   }
 }
