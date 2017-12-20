@@ -8,7 +8,8 @@ export const initialState = {
   calculator: { value: "" },
   ui: {
     obfuscateOn: false,
-    navigationOpen: false,
+    sideNavigationOpen: false,
+    topNavigationOpen: false,
   },
 };
 

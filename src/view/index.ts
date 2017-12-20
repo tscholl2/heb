@@ -20,25 +20,37 @@ export function view(dispatch: IDispatch<IState>) {
   const goToGraph = () => dispatch(actions.go("/graph"));
   const goToPg3 = () => dispatch(actions.go("/page3"));
   const updateCalc = (value: string) => dispatch(actions.updateIn(["calculator"])({ value }));
-  const closeObf = () =>
+  const closeNavigation = () =>
     dispatch(
-      actions.update<IState>(state => {
-        if (state.ui.navigationOpen) {
-          return { ui: { obfuscateOn: false, navigationOpen: false } };
-        }
-        return;
+      actions.updateIn(["ui"])({
+        obfuscateOn: false,
+        topNavigationOpen: false,
+        sideNavigationOpen: false,
       }),
     );
-  const openNav = () =>
-    dispatch(actions.updateIn(["ui"])({ navigationOpen: true, obfuscateOn: true }));
+  const openTopNav = () =>
+    dispatch(actions.updateIn(["ui"])({ topNavigationOpen: true, obfuscateOn: true }));
+  const openSideNav = () =>
+    dispatch(actions.updateIn(["ui"])({ sideNavigationOpen: true, obfuscateOn: true }));
   return (state = initialState) =>
     h("div", { class: "container" }, [
       h("header", undefined, [
-        h("span", undefined, [h("button", { onclick: openNav }, [MenuIcon()])]),
+        h("span", undefined, [h("button", { onclick: openSideNav }, [MenuIcon()])]),
         h("h1", undefined, ["Sample App"]),
-        h("span", undefined, [h("button", { onclick: openNav }, [AccountIcon()])]),
+        h("span", undefined, [
+          h("button", { onclick: openTopNav }, [
+            AccountIcon(),
+            h("nav", { class: cc(["top-nav", { ["nav-open"]: state.ui.topNavigationOpen }]) }, [
+              h("ul", undefined, [
+                h("li", undefined, ["item1"]),
+                h("li", undefined, ["item2"]),
+                h("li", undefined, ["item3"]),
+              ]),
+            ]),
+          ]),
+        ]),
       ]),
-      h("nav", { class: cc([{ ["nav-open"]: state.ui.navigationOpen }]) }, [
+      h("nav", { class: cc(["side-nav", { ["nav-open"]: state.ui.sideNavigationOpen }]) }, [
         h("button", { onclick: goToCalc }, ["Calculator"]),
         h("button", { onclick: goToGraph }, ["Graph"]),
         h("button", { onclick: goToPg3 }, ["About"]),
@@ -68,7 +80,7 @@ export function view(dispatch: IDispatch<IState>) {
       // portals
       h("div", {
         class: cc(["obfuscatsion", { ["obfuscatsion-on"]: state.ui.obfuscateOn }]),
-        onclick: closeObf,
+        onclick: closeNavigation,
       }),
       h("div", { class: cc(["modal", { "modal-on": false }]) }, [
         h("div", { style: { backgroundColor: "white", width: "800px", height: "400px" } }, [
