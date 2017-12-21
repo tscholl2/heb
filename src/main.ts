@@ -10,15 +10,16 @@ function start(state = initialState) {
   const controller = new Controller<IState>();
   let node: any = undefined;
   const v = view(controller.dispatch);
-  controller.addListener(state => {
-    console.log("updating state");
-    window["state"] = state;
-    patch(node, (node = v(state)), document.body);
-  });
+  controller.addListener(state => patch(node, (node = v(state)), document.body));
   // listen for url changes
   addListener(path => controller.dispatch(actions.go(path)));
   // get the ball rolling
   controller.dispatch(() => state);
+  // persist state in window for hot reloading
+  controller.addListener(state => {
+    console.log("updating state");
+    window["state"] = state;
+  });
   // attach redux devtools
   // TODO also check if production
   if (window["__REDUX_DEVTOOLS_EXTENSION__"]) {
@@ -49,8 +50,7 @@ function start(state = initialState) {
   }
 }
 
-// TODO also check if production
-if (module.hot) {
+if (module.hot && process.env.NODE_ENV !== "production") {
   module.hot.accept(() => {
     console.log("ADDING A NEW THING");
     start(window["state"]);
