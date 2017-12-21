@@ -5,6 +5,10 @@ import { StaticSwitch } from "./components/switch";
 import { MenuIcon } from "./components/menu-icon";
 import { AccountIcon } from "./components/account-icon";
 import { Calculator } from "./components/calculator";
+
+const AccountIconSVG = require("./components/account-icon.svg");
+const MenuIconSVG = require("./components/menu-icon.svg");
+
 import cc from "classcat";
 import "./style.scss";
 
@@ -35,9 +39,13 @@ export function view(dispatch: IDispatch<IState>) {
   return (state = initialState) =>
     h("div", { class: "container" }, [
       h("header", undefined, [
-        h("span", undefined, [h("button", { onclick: openSideNav }, [MenuIcon()])]),
+        h("span", undefined, [
+          h("button", { onclick: openSideNav }, [h("img", { src: "dist/" + MenuIconSVG })]),
+        ]),
         h("h1", undefined, ["Sample App"]),
-        h("span", undefined, [h("button", { onclick: openTopNav }, [AccountIcon()])]),
+        h("span", undefined, [
+          h("button", { onclick: openTopNav }, [h("img", { src: "dist/" + AccountIconSVG })]),
+        ]),
       ]),
       h("nav", { class: cc(["side-nav", { ["nav-open"]: state.ui.sideNavigationOpen }]) }, [
         h("button", { onclick: goToCalc }, ["Calculator"]),
