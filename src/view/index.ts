@@ -74,7 +74,7 @@ export function view(dispatch: IDispatch<IState>) {
             path: state.router.path,
             components: [
               ({ params }) => h("h6", undefined, [`Page #${params.id}`]),
-              () => Calculator({ value: state.calculator.value, onupdate: updateCalc }),
+              () => Calculator({ value: state.calculator.value, onchange: updateCalc }),
               () => h("h1", undefined, ["page not found"]),
             ],
           }),
