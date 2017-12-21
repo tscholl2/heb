@@ -1,18 +1,17 @@
 import "./style.scss";
-import { getSamples } from "./sampler";
+import { getSamples } from "./";
 import "./imports";
 
 const ul = document.createElement("ul");
 getSamples().forEach(s => {
   const li = document.createElement("li");
   li.onclick = () => {
-    document.querySelector("#host")!.remove();
-    const host = document.createElement("div");
-    host.id = "host";
-    document.getElementById("container")!.appendChild(host);
+    const host = document.querySelector("#host")!;
+    host.innerHTML = "";
+    // TODO: try shadow dom?
+    // const shadow = host.attachShadow({ mode: "open" });
     // TODO: iframe is probably better
-    const shadow = host.attachShadow({ mode: "open" });
-    s.render(shadow as any);
+    s.render(host as any);
   };
   li.innerText = s.name;
   ul.appendChild(li);
