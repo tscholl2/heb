@@ -12,18 +12,16 @@ body {
   grid-template-areas: "nav main";
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 50%, transparent 50%);
   background-size: 50px;
-}
-
-#sidebar {
-  grid-area: nav;
-  background-color: yellow;
-}
-
-#host {
-  grid-area: main;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 50%, transparent 50%);
-  background-size: 50px;
+  > nav {
+    grid-area: nav;
+    background-color: yellow;
+  }
+  > main {
+    grid-area: main;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 50%, transparent 50%);
+    background-size: 50px;
+  }
 }

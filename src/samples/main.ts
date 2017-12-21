@@ -2,18 +2,38 @@ import "./style.scss";
 import { getSamples } from "./";
 import "./imports";
 
+const sidebar = document.querySelector("#container>nav")!;
+sidebar.innerHTML = "";
 const ul = document.createElement("ul");
-getSamples().forEach(s => {
+
+const samples = getSamples();
+
+Object.keys(samples).forEach(s => {
   const li = document.createElement("li");
   li.onclick = () => {
-    const host = document.querySelector("#host")!;
-    host.innerHTML = "";
-    // TODO: try shadow dom?
-    // const shadow = host.attachShadow({ mode: "open" });
-    // TODO: iframe is probably better
-    s.render(host as any);
+    history.pushState({}, "", samples[s].name);
+    update();
   };
-  li.innerText = s.name;
+  li.innerText = samples[s].name;
   ul.appendChild(li);
 });
-document.getElementById("sidebar")!.appendChild(ul);
+sidebar.appendChild(ul);
+
+function update() {
+  const path = location.pathname;
+  const name = Object.keys(samples).find(s => `/${s}` === path);
+  if (name === undefined) {
+    return;
+  }
+  document.querySelector("#container>main")!.remove();
+  const host = document.createElement("main");
+  document.querySelector("#container")!.appendChild(host);
+  // TODO: try shadow dom?
+  // const shadow = host.attachShadow({ mode: "open" });
+  // TODO: iframe is probably better
+  samples[name].render(host);
+}
+
+addEventListener("popstate", update);
+
+update();

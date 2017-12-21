@@ -3,7 +3,11 @@ import { Controller } from "../controller";
 import { addSample, addStatelessSample, addStatefullSample } from "./";
 
 function Counter(count = 0, onclick: any) {
-  return h("div", undefined, [h("button", { onclick }, ["↑"]), h("h2", undefined, [count])]);
+  return h("div", undefined, [
+    h("h1", undefined, ["counter"]),
+    h("button", { onclick }, ["↑"]),
+    h("h2", undefined, [count]),
+  ]);
 }
 
 addStatelessSample("img", () =>
