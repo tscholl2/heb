@@ -1,5 +1,4 @@
 import { h } from "picodom";
-import { h } from "picodom";
 
 // import url from "./menu-icon.svg":
 const url = require("./menu-icon.svg");
