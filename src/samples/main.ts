@@ -1,12 +1,10 @@
 import "./style.scss";
-import { getSamples } from "./";
+import { samples } from "./";
 import "./imports";
 
 const sidebar = document.querySelector("#container>nav")!;
 sidebar.innerHTML = "";
 const ul = document.createElement("ul");
-
-const samples = getSamples();
 
 Object.keys(samples).forEach(s => {
   const li = document.createElement("li");

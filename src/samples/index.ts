@@ -6,15 +6,10 @@ export interface ISample {
   render(root: HTMLElement): void;
 }
 
-const samples: { [key: string]: ISample } = {};
+export const samples: { [key: string]: ISample } = {};
 
 export function addSample(name: ISample["name"], render: ISample["render"]) {
-  console.log(`sample ${name} created at ${JSON.stringify(thisLine())}`);
   samples[name] = { name, render };
-}
-
-export function getSamples() {
-  return samples;
 }
 
 // helper functions
