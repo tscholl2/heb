@@ -5,21 +5,22 @@ import "./imports";
 const sidebar = document.querySelector("#container>nav")!;
 sidebar.innerHTML = "";
 const ul = document.createElement("ul");
-
-Object.keys(samples).forEach(s => {
+for (const k in samples) {
+  const { name, filename } = samples[k];
   const li = document.createElement("li");
   li.onclick = () => {
-    history.pushState({}, "", samples[s].name);
+    history.pushState({}, "", name);
     update();
   };
-  li.innerText = samples[s].name;
+  li.innerText = name;
+  li.title = filename;
   ul.appendChild(li);
-});
+}
 sidebar.appendChild(ul);
 
 function update() {
   const path = location.pathname;
-  const name = Object.keys(samples).find(s => `/${s}` === path);
+  const name = Object.keys(samples).find(k => `/${k}` === path);
   if (name === undefined) {
     return;
   }

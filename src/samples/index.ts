@@ -6,23 +6,27 @@ export interface ISample {
   render(root: HTMLElement): void;
 }
 
-export const samples: { [key: string]: ISample } = {};
+export const samples: { [key: string]: ISample & { filename: string } } = {};
 
-export function addSample(name: ISample["name"], render: ISample["render"]) {
-  samples[name] = { name, render };
+export function _addSampleFilename(filename: string) {
+  Object.keys(samples).forEach(k => (samples[k].filename = samples[k].filename || filename));
+}
+
+function _addSample(name: ISample["name"], render: ISample["render"]) {
+  samples[name] = { name, render, filename: "" };
 }
 
 // helper functions
 
 export function addStatelessSample(name: ISample["name"], view: () => VNode) {
-  addSample(name, root => patch(undefined, view(), root));
+  _addSample(name, root => patch(undefined, view(), root));
 }
 
 export function addStatefullSample<S>(
   name: ISample["name"],
   view: (state: S | undefined, dispatch: IDispatch<S>) => VNode,
 ) {
-  addSample(name, root => {
+  _addSample(name, root => {
     const controller = new Controller<S>();
     let node: any;
     const listener = (state: S | undefined, dispatch: IDispatch<S>) =>
