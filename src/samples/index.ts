@@ -32,7 +32,13 @@ export function addStatefullSample<S>(
     const listener = (state: S | undefined, dispatch: IDispatch<S>) =>
       patch(node, (node = view(state, dispatch)), root);
     controller.addListener(listener);
-    controller.addListener(s => history.pushState({}, "", `/${name}#${btoa(JSON.stringify(s))}`));
+    controller.addListener(s =>
+      history.pushState(
+        {},
+        "",
+        `${location.pathname}${location.search}#${btoa(JSON.stringify(s))}`,
+      ),
+    );
     const hash = window.location.hash.substr(1);
     if (hash !== "") {
       controller.dispatch(() => JSON.parse(atob(hash)));
