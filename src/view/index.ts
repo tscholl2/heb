@@ -2,8 +2,6 @@ import { h } from "picodom";
 import { IDispatch, actions } from "../controller";
 import { initialState, IState } from "../model";
 import { StaticSwitch } from "./components/switch";
-import { MenuIcon } from "./components/menu-icon";
-import { AccountIcon } from "./components/account-icon";
 import { Calculator } from "./components/calculator";
 
 const AccountIconSVG = require("./components/account-icon.svg");
@@ -40,11 +38,11 @@ export function view(dispatch: IDispatch<IState>) {
     h("div", { class: "container" }, [
       h("header", undefined, [
         h("span", undefined, [
-          h("button", { onclick: openSideNav }, [h("img", { src: "dist/" + MenuIconSVG })]),
+          h("button", { onclick: openSideNav }, [h("img", { src: MenuIconSVG })]),
         ]),
         h("h1", undefined, ["Sample App"]),
         h("span", undefined, [
-          h("button", { onclick: openTopNav }, [h("img", { src: "dist/" + AccountIconSVG })]),
+          h("button", { onclick: openTopNav }, [h("img", { src: AccountIconSVG })]),
         ]),
       ]),
       h("nav", { class: cc(["side-nav", { ["nav-open"]: state.ui.sideNavigationOpen }]) }, [

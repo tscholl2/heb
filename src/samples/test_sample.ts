@@ -10,7 +10,7 @@ function Counter(count = 0, onclick: any) {
 }
 
 addStatelessSample("img", () =>
-  h("img", { src: "dist/" + require("../view/components/account-icon.svg") }),
+  h("img", { src: require("../view/components/account-icon.svg") }),
 );
 
 addStatefullSample<number>("counter", (state = 0, dispatch) =>
