@@ -34,16 +34,19 @@ function start(state = initialState) {
     }
     controller.addPlugin(r => state => {
       const next = r(state);
-      if (!(r as any)["__REDUX_DEVTOOLS__"]) {
+      if (!(r as any)["__REDUX_DEVTOOLS_IGNORE__"]) {
         // TODO wrap reducers with some extra debugging info
-        devtools.send({ type: "TODO" }, next);
+        devtools.send(
+          { type: (r as any).__debug_name || "TODO", args: (r as any).__debug_args },
+          next,
+        );
       }
       return next;
     });
     devtools.subscribe((message: any) => {
       if (message.type === "DISPATCH" && message.state) {
         controller.dispatch(
-          Object.assign(() => JSON.parse(message.state), { __REDUX_DEVTOOLS__: true }),
+          Object.assign(() => JSON.parse(message.state), { __REDUX_DEVTOOLS_IGNORE__: true }),
         );
       }
     });

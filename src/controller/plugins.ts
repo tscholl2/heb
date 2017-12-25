@@ -20,9 +20,11 @@ export function SliceReducer<S, T = S>(path: string[]): (r: IReducer<T>) => IRed
 }
 
 // Compines Partial and Slicing.
-export const PartialSliceReducer = <S = any, T = S>(path: string[]) => (fn: IPartialReducer<T>) =>
-  SliceReducer<S, T>(path)(PartialReducer<T>(fn));
+export function PartialSliceReducer<S = any, T = S>(path: string[]) {
+  return (fn: IPartialReducer<T>) => SliceReducer<S, T>(path)(PartialReducer<T>(fn));
+}
 
-export function CombineReducerList<S>(arr: IReducer<S>[]): IReducer<S> {
+export function CombineReducers<S>(arr: IReducer<S>[]): IReducer<S> {
+  console.log("comining ", arr);
   return (s: S) => arr.reduce((p, n) => n(p), s);
 }

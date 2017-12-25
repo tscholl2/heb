@@ -1,8 +1,10 @@
 import { h } from "picodom";
 import { IDispatch, actions } from "../controller";
+import { CombineReducers } from "../controller/plugins";
 import { initialState, IState } from "../model";
 import { StaticSwitch } from "./components/switch";
 import { Calculator } from "./components/calculator";
+import { bindDebug as bind } from "../controller/actions";
 
 const AccountIconSVG = require("./components/account-icon.svg");
 const MenuIconSVG = require("./components/menu-icon.svg");
@@ -14,41 +16,40 @@ const Switch = StaticSwitch(["/page:id", "/calculator", "*"]);
 
 export function view(dispatch: IDispatch<IState>) {
   // bind actions
-  const onTitleInput = (e: any) => dispatch(actions.update(_ => ({ title: e.target.value })));
-  const goToFoo = () => dispatch(actions.go("/foo"));
-  const addOneToCount = () => dispatch(actions.update((s: any) => ({ count: s.count + 1 })));
-  const addOneToCountLater = () => setTimeout(addOneToCount, 1000);
-  const goToCalc = () => dispatch(actions.go("/calculator"));
-  const goToGraph = () => dispatch(actions.go("/graph"));
-  const goToPg3 = () => dispatch(actions.go("/page3"));
-  const updateCalc = (value: string) => dispatch(actions.updateIn(["calculator"])({ value }));
-  const closeNavigation = () =>
-    dispatch(
+  const B = bind(dispatch)({
+    onTitleInput: (e: any) => actions.update(_ => ({ title: e.target.value })),
+    addOneToCount: () => actions.update((s: any) => ({ count: s.count + 1 })),
+    addOneToCountLater: () => setTimeout(A.addOneToCount, 1000),
+    goToFoo: () => CombineReducers<IState>([actions.go("/foo"), B.closeNavigation()]),
+    goToCalc: () => CombineReducers<IState>([actions.go("/calculator"), B.closeNavigation()]),
+    goToGraph: () => CombineReducers<IState>([actions.go("/graph"), B.closeNavigation()]),
+    goToPg3: () => CombineReducers<IState>([actions.go("/page3"), B.closeNavigation()]),
+    updateCalc: (value: string) => actions.updateIn(["calculator"])({ value }),
+    closeNavigation: () =>
       actions.updateIn(["ui"])({
         obfuscateOn: false,
         topNavigationOpen: false,
         sideNavigationOpen: false,
       }),
-    );
-  const openTopNav = () =>
-    dispatch(actions.updateIn(["ui"])({ topNavigationOpen: true, obfuscateOn: true }));
-  const openSideNav = () =>
-    dispatch(actions.updateIn(["ui"])({ sideNavigationOpen: true, obfuscateOn: true }));
+    openTopNav: () => actions.updateIn(["ui"])({ topNavigationOpen: true, obfuscateOn: true }),
+    openSideNav: () => actions.updateIn(["ui"])({ sideNavigationOpen: true, obfuscateOn: true }),
+  });
+  const A = bind(dispatch)(B);
   return (state = initialState) =>
     h("div", { class: "container" }, [
       h("header", undefined, [
         h("span", undefined, [
-          h("button", { onclick: openSideNav }, [h("img", { src: MenuIconSVG })]),
+          h("button", { onclick: A.openSideNav }, [h("img", { src: MenuIconSVG })]),
         ]),
         h("h1", undefined, ["Sample App"]),
         h("span", undefined, [
-          h("button", { onclick: openTopNav }, [h("img", { src: AccountIconSVG })]),
+          h("button", { onclick: A.openTopNav }, [h("img", { src: AccountIconSVG })]),
         ]),
       ]),
       h("nav", { class: cc(["side-nav", { ["nav-open"]: state.ui.sideNavigationOpen }]) }, [
-        h("button", { onclick: goToCalc }, ["Calculator"]),
-        h("button", { onclick: goToGraph }, ["Graph"]),
-        h("button", { onclick: goToPg3 }, ["About"]),
+        h("button", { onclick: A.goToCalc }, ["Calculator"]),
+        h("button", { onclick: A.goToGraph }, ["Graph"]),
+        h("button", { onclick: A.goToPg3 }, ["About"]),
       ]),
       h("nav", { class: cc(["top-nav", { ["nav-open"]: state.ui.topNavigationOpen }]) }, [
         h("ul", undefined, [
@@ -62,17 +63,17 @@ export function view(dispatch: IDispatch<IState>) {
         undefined,
         [
           h("h1", undefined, [state.title]),
-          h("input", { value: state.title, oninput: onTitleInput }),
+          h("input", { value: state.title, oninput: A.onTitleInput }),
           h("h1", undefined, [state.router.path]),
-          h("button", { onclick: goToFoo }, ["→"]),
+          h("button", { onclick: A.goToFoo }, ["→"]),
           h("h1", undefined, [state.count]),
-          h("button", { onclick: addOneToCount }, ["↑ now"]),
-          h("button", { onclick: addOneToCountLater }, ["↑ late"]),
+          h("button", { onclick: A.addOneToCount }, ["↑ now"]),
+          h("button", { onclick: A.addOneToCountLater }, ["↑ late"]),
           Switch({
             path: state.router.path,
             components: [
               ({ params }) => h("h6", undefined, [`Page #${params.id}`]),
-              () => Calculator({ value: state.calculator.value, onchange: updateCalc }),
+              () => Calculator({ value: state.calculator.value, onchange: A.updateCalc }),
               () => h("h1", undefined, ["page not found"]),
             ],
           }),
@@ -82,7 +83,7 @@ export function view(dispatch: IDispatch<IState>) {
       // portals
       h("div", {
         class: cc(["obfuscatsion", { ["obfuscatsion-on"]: state.ui.obfuscateOn }]),
-        onclick: closeNavigation,
+        onclick: A.closeNavigation,
       }),
       h("div", { class: cc(["modal", { "modal-on": false }]) }, [
         h("div", { style: { backgroundColor: "white", width: "800px", height: "400px" } }, [
