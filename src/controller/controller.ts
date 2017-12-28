@@ -3,7 +3,7 @@ export type IDispatch<S = any> = (reducer: IReducer<S>) => void;
 export type IListener<S = any> = (state: S, dispatch: IDispatch<S>) => void;
 export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
 
-export class Controller<S> {
+export class Controller<S = any> {
   private state: S;
   private plugins: IPlugin<S>[] = [];
   private listeners: IListener<S>[] = [];
