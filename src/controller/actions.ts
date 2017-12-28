@@ -1,7 +1,7 @@
 import { go, IState as IRouterState } from "../addons/router";
 import { SliceReducer, PartialReducer, PartialSliceReducer } from "./plugins";
 import { IState } from "../model";
-import { IDispatch } from "./controller";
+import { IDispatch } from "./";
 
 export const actions = {
   go: (path: string) => SliceReducer<IState, IRouterState>(["router"])(go(path)),

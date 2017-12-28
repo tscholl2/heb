@@ -5,8 +5,6 @@ export type IPlugin<S = any> = (reducer: IReducer<S>) => IReducer<S>;
 
 export class Controller<S> {
   private state: S;
-  private isUpdating: boolean;
-  private shouldUpdate: boolean;
   private plugins: IPlugin<S>[] = [];
   private listeners: IListener<S>[] = [];
 
@@ -34,35 +32,7 @@ export class Controller<S> {
     // important: state should be immutable
     if (this.state !== result) {
       this.state = result;
-      this.update();
+      this.listeners.forEach(l => l(this.state, this.dispatch));
     }
   };
-
-  private update() {
-    if (this.isUpdating) {
-      this.shouldUpdate = true;
-      return;
-    }
-    this.isUpdating = true;
-    // TODO compare requestAnimationFrame and setTimeout
-    requestAnimationFrame(() => {
-      this.listeners.forEach(l => l(this.state, this.dispatch));
-      this.isUpdating = false;
-      if (this.shouldUpdate) {
-        this.shouldUpdate = false;
-        this.update();
-      }
-    });
-    /*
-      setTimeout(() => {
-        this.listeners.forEach(l => l(this.state, this.dispatch));
-        this.isUpdating = false;
-        if (this.shouldUpdate) {
-          this.shouldUpdate = false;
-          this.update();
-        }
-      }, 17);
-    }
-    */
-  }
 }

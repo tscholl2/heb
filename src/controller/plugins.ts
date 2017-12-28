@@ -1,4 +1,4 @@
-import { IReducer } from "./index";
+import { IReducer } from "./";
 import { merge, setIn, getIn } from "icepick";
 
 // Allows a reducer to return Partial<State>.
