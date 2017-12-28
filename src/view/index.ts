@@ -16,7 +16,7 @@ const Switch = StaticSwitch(["/page:id", "/calculator", "*"]);
 
 export function view(dispatch: IDispatch<IState>) {
   // bind actions
-  const B = bind(dispatch)({
+  const B = {
     onTitleInput: (e: any) => actions.update(_ => ({ title: e.target.value })),
     addOneToCount: () => actions.update((s: any) => ({ count: s.count + 1 })),
     addOneToCountLater: () => setTimeout(A.addOneToCount, 1000),
@@ -33,7 +33,7 @@ export function view(dispatch: IDispatch<IState>) {
       }),
     openTopNav: () => actions.updateIn(["ui"])({ topNavigationOpen: true, obfuscateOn: true }),
     openSideNav: () => actions.updateIn(["ui"])({ sideNavigationOpen: true, obfuscateOn: true }),
-  });
+  };
   const A = bind(dispatch)(B);
   return (state = initialState) =>
     h("div", { class: "container" }, [
