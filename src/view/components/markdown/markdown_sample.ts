@@ -1,6 +1,6 @@
 import { addStatefullSample } from "../../../samples";
 // import { Markdown } from "./";
-const { Markdown } = require("./index2.ts");
+const { Markdown } = require("./index2.3.ts");
 import { h } from "picodom";
 
 addStatefullSample<{ value: string; fake: number }>(
@@ -19,6 +19,7 @@ addStatefullSample<{ value: string; fake: number }>(
         ["toggle"],
       ),
       h("br"),
+      h("h1", undefined, [s.value]),
       Markdown({ markdown: s.value, update: () => dispatch(s => Object.assign({}, s)) }),
     ]),
 );
