@@ -9,11 +9,9 @@ function Counter(count = 0, onclick: any) {
   ]);
 }
 
-addStatelessSample("img", () =>
-  h("img", { src: require("../view/components/account-icon.svg") }),
-);
+addStatelessSample("img", () => h("img", { src: require("../view/components/account-icon.svg") }));
 
-addStatefullSample<number>("counter", (state = 0, dispatch) =>
+addStatefullSample<number>("counter", dispatch => (state = 0) =>
   Counter(state, () => dispatch(() => state + 1)),
 );
 

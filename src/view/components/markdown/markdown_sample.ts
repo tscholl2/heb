@@ -5,7 +5,7 @@ import { h } from "picodom";
 
 addStatefullSample<{ value: string; fake: number }>(
   "markdown",
-  (s = { value: "", fake: 0 }, dispatch) =>
+  dispatch => (s = { value: "", fake: 0 }) =>
     h("div", undefined, [
       h("h1", undefined, [s.fake]),
       h("button", { onclick: () => dispatch(() => ({ ...s, fake: s.fake + 1 })) }, ["counter"]),

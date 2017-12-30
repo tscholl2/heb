@@ -6,8 +6,8 @@ export function asyncComponent<P>(
 ): Component<any> {
   return props =>
     h("x-async-component", {
-      oncreate: el => update(el, props),
-      onupdate: el => update(el, props),
+      oncreate: (el: any) => update(el, props),
+      onupdate: (el: any) => update(el, props),
     });
   function update(el: HTMLElement & { __stuff: any }, props: any) {
     const { node: oldNode, props: oldProps, isLoading } = el.__stuff || (el.__stuff = {});
@@ -29,7 +29,7 @@ export function asyncComponent<P>(
   }
 }
 
-function shallowEquals(a = {}, b = {}) {
+function shallowEquals(a: { [key: string]: any } = {}, b: { [key: string]: any } = {}) {
   if (a === b) {
     return true;
   }

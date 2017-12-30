@@ -24,13 +24,13 @@ export function addStatelessSample(name: ISample["name"], view: () => VNode) {
 
 export function addStatefullSample<S>(
   name: ISample["name"],
-  view: (state: S | undefined, dispatch: IDispatch<S>) => VNode,
+  view: (dispatch: IDispatch<S>) => (state: S | undefined) => VNode,
 ) {
   _addSample(name, root => {
     const controller = new Controller<S>();
     let node: any;
-    const listener = (state: S | undefined, dispatch: IDispatch<S>) =>
-      patch(node, (node = view(state, dispatch)), root);
+    const v = view(controller.dispatch);
+    const listener = (state: S | undefined) => patch(node, (node = v(state)), root);
     controller.addListener(listener);
     controller.addListener(s =>
       history.pushState(
@@ -43,7 +43,7 @@ export function addStatefullSample<S>(
     if (hash !== "") {
       controller.dispatch(() => JSON.parse(atob(hash)));
     } else {
-      listener(undefined, controller.dispatch);
+      listener(undefined);
     }
   });
 }
