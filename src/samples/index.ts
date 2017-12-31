@@ -18,13 +18,13 @@ function _addSample(name: ISample["name"], render: ISample["render"]) {
 
 // helper functions
 
-export function addStatelessSample(name: ISample["name"], view: () => VNode) {
+export function addStatelessSample(name: ISample["name"], view: () => VNode<any>) {
   _addSample(name, root => patch(undefined, view(), root));
 }
 
 export function addStatefullSample<S>(
   name: ISample["name"],
-  view: (dispatch: IDispatch<S>) => (state: S | undefined) => VNode,
+  view: (dispatch: IDispatch<S>) => (state: S | undefined) => VNode<any>,
 ) {
   _addSample(name, root => {
     const controller = new Controller<S>();

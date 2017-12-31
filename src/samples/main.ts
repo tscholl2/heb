@@ -20,7 +20,7 @@ function update() {
   sidebar.appendChild(ul);
   const m = /name=([^\&]+)/g.exec(location.search);
   const path = m ? m[1] : "";
-  const name = Object.keys(samples).find(k => k === path);
+  const name = Object.keys(samples).find(k => encodeURIComponent(k) === path);
   if (name === undefined) {
     return;
   }
