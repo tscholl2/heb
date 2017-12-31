@@ -6,3 +6,5 @@ require("../../src/view/components/calculator/calc_sample.ts");
 _addSampleFilename("../../src/view/components/calculator/calc_sample.ts");
 require("../../src/view/components/markdown/markdown_sample.ts");
 _addSampleFilename("../../src/view/components/markdown/markdown_sample.ts");
+require("../../src/view/components/counter_sample.ts");
+_addSampleFilename("../../src/view/components/counter_sample.ts");
