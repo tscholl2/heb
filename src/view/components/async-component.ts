@@ -1,15 +1,11 @@
 import { h, patch, Component, VNode } from "picodom";
 
 export function asyncComponent<P>(
-  fn: (props: P) => Promise<VNode<any>>,
-  loader: (props: P) => VNode<any>,
+  componentName: string,
+  fn: (props: P, children?: VNode<any>[]) => Promise<VNode<any>>,
+  loader: (props: P, children?: VNode<any>[]) => VNode<any>,
 ): Component<any> {
-  return props =>
-    h("x-async-component", {
-      oncreate: (el: any) => update(el, props),
-      onupdate: (el: any) => update(el, props),
-    });
-  function update(el: HTMLElement & { __stuff: any }, props: any) {
+  const update = (el: any, props: P) => {
     const { node: oldNode, props: oldProps, isLoading } = el.__stuff || (el.__stuff = {});
     if (shallowEquals(props, oldProps)) {
       return;
@@ -26,10 +22,15 @@ export function asyncComponent<P>(
         Object.assign(el.__stuff, { node, isLoading: false });
       }
     });
-  }
+  };
+  return props =>
+    h(`x-${componentName}`, {
+      oncreate: (el: any) => update(el, props),
+      onupdate: (el: any) => update(el, props),
+    });
 }
 
-function shallowEquals(a: { [key: string]: any } = {}, b: { [key: string]: any } = {}) {
+function shallowEquals(a: any = {}, b: any = {}) {
   if (a === b) {
     return true;
   }
