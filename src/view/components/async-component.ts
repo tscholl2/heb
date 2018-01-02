@@ -2,8 +2,8 @@ import { h, patch, Component, VNode } from "picodom";
 
 export function asyncComponent<P>(
   componentName: string,
-  fn: (props: P, children?: VNode<any>[]) => Promise<VNode<any>>,
-  loader: (props: P, children?: VNode<any>[]) => VNode<any>,
+  fn: (props: P) => Promise<VNode<any>>,
+  loader: (props: P) => VNode<any>,
 ): Component<any> {
   const update = (el: any, props: P) => {
     const { node: oldNode, props: oldProps, isLoading } = el.__stuff || (el.__stuff = {});
